@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__842734ff-4c03-4fa7-bb07-fbc9268f22fe__get_metadata",
+      "mcp__842734ff-4c03-4fa7-bb07-fbc9268f22fe__get_variable_defs",
+      "mcp__842734ff-4c03-4fa7-bb07-fbc9268f22fe__get_screenshot",
+      "Bash(npx vercel *)",
+      "Bash(ffprobe -v error -show_entries format=duration,size:stream=codec_type,codec_name,width,height,avg_frame_rate -of default=noprint_wrappers=1 \"public/hero-animation.webm\")",
+      "Bash(ffmpeg -y -i hero-animation.webm -an -vf \"scale=1280:-2\" -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 30 -preset slow -movflags +faststart hero.mp4)",
+      "Bash(ffmpeg -y -i hero-animation.webm -an -vf \"scale=1280:-2\" -c:v libvpx-vp9 -crf 36 -b:v 0 -row-mt 1 hero.webm)",
+      "Bash(curl -sL --max-time 20 -A \"Mozilla/5.0\" \"https://reactbits.dev/r/LightRays-TS-TW\" -o /tmp/lr.json)",
+      "Bash(python3 -c ' *)",
+      "Bash(npm install *)",
+      "Bash(node -e \"console.log\\('ogl', require\\('./package.json'\\).dependencies.ogl\\)\")",
+      "Bash(npm run *)",
+      "Bash(curl -sL --max-time 25 -A \"Mozilla/5.0\" \"https://reactbits.dev/r/LaserFlow-TS-TW\" -o /tmp/laser.json -w \"HTTP %{http_code} | bytes %{size_download}\\\\n\")",
+      "Bash(node -e \"console.log\\('three', require\\('./package.json'\\).dependencies.three\\)\")",
+      "Read(//tmp/**)",
+      "Bash(node -e \"const p=require\\('./package.json'\\);console.log\\('postprocessing', p.dependencies.postprocessing, '| three', p.dependencies.three, '| face-api?', p.dependencies['face-api.js']||'NON installato ✅'\\)\")",
+      "Bash(node -e \"const p=require\\('./package.json'\\);console.log\\('postprocessing', p.dependencies.postprocessing\\)\")",
+      "Bash(rm -f src/components/grid-scan.tsx)",
+      "Bash(curl -sL --max-time 25 -A \"Mozilla/5.0\" \"https://reactbits.dev/r/Grainient-TS-TW\" -o /tmp/grain.json -w \"HTTP %{http_code} | bytes %{size_download}\\\\n\")",
+      "Bash(npm uninstall *)",
+      "Bash(node -e \"const p=require\\('./package.json'\\);console.log\\('postprocessing:', p.dependencies.postprocessing||'rimosso ✅'\\);console.log\\('deps:', Object.keys\\(p.dependencies\\).join\\(', '\\)\\)\")"
+    ]
+  }
+}

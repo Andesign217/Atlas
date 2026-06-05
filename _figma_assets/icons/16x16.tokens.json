@@ -1,0 +1,25 @@
+{
+  "size": {
+    "$type": "number",
+    "$value": 16,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2049:42",
+      "com.figma.scopes": [
+        "WIDTH_HEIGHT"
+      ]
+    }
+  },
+  "border": {
+    "$type": "number",
+    "$value": 1.5,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2049:43",
+      "com.figma.scopes": [
+        "STROKE_FLOAT"
+      ]
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "16x16"
+  }
+}

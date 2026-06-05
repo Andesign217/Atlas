@@ -1,0 +1,149 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/* Dark mode pilotato dalla classe .dark (non dal solo prefers-color-scheme) */
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   Mapping semantico (stile shadcn/ui) → token Figma
+   I valori puntano alle variabili di tokens.css, che cambiano
+   automaticamente sotto .dark → niente duplicazione.
+   ============================================================ */
+:root {
+  --background: var(--base-background-100);
+  --foreground: var(--base-foreground-100);
+
+  --primary: var(--primary-background-100);
+  --primary-foreground: var(--primary-foreground-100);
+
+  --secondary: var(--secondary-background-100);
+  --secondary-foreground: var(--secondary-foreground-100);
+
+  --accent: var(--accent-background-100);
+  --accent-foreground: var(--accent-foreground-100);
+
+  --muted: var(--muted-background-100);
+  --muted-foreground: var(--muted-foreground-100);
+
+  --card: var(--card-background-100);
+  --card-foreground: var(--card-foreground-100);
+
+  --popover: var(--popover-background-100);
+  --popover-foreground: var(--popover-foreground-100);
+
+  --destructive: var(--destructive-background-100);
+  --destructive-foreground: var(--destructive-foreground-100);
+
+  --success: var(--success-background-100);
+  --success-foreground: var(--success-foreground-100);
+
+  --warning: var(--warning-background-100);
+  --warning-foreground: var(--warning-foreground-100);
+
+  --border: var(--border-100);
+  --input: var(--input-100);
+  --ring: var(--primary-background-100);
+
+  /* raggio base per i componenti */
+  --radius: var(--radius-lg);
+}
+
+/* ============================================================
+   Espone i token a Tailwind v4 come utility (@theme inline)
+   → bg-primary, text-muted-foreground, rounded-2xl, ecc.
+   ============================================================ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Nota: i raggi (--radius-lg/2xl/3xl/4xl), spacing, blur sono già definiti
+   in tokens.css e allineano automaticamente le utility Tailwind corrispondenti. */
+
+/* ============================================================
+   Base — DEVE stare in @layer base, altrimenti le regole "unlayered"
+   vincono sulle utility di Tailwind (@layer utilities) e sovrascrivono
+   i border-color personalizzati (es. border-primary-foreground/20).
+   ============================================================ */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* ============================================================
+   Vault flow diagram — pulse che scorre lungo le linee (loop)
+   ============================================================ */
+@keyframes vault-flow {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes vault-node-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vault-pulse,
+  .vault-node {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   Smooth scroll verso gli anchor + offset per la navbar sticky
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
