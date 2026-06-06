@@ -28,7 +28,7 @@ import { VaultFlow } from "@/components/vault-flow";
 import { ForbesLogo } from "@/components/forbes-logo";
 import { HeroRays } from "@/components/hero-rays";
 import { WhyLaser } from "@/components/why-laser";
-import Grainient from "@/components/grainient";
+import Prism from "@/components/prism";
 import { RotatingHeadline } from "@/components/rotating-headline";
 
 const stats = [
@@ -486,20 +486,21 @@ export default function Home() {
         <section id="contact" className="border-t border-border">
           <div className="mx-auto w-full max-w-7xl px-6 py-24">
             <Reveal y={24}>
-              <div className="relative isolate overflow-hidden rounded-3xl px-8 py-16 text-center text-primary-foreground md:px-16 md:py-20">
-                <div aria-hidden className="absolute inset-0 -z-10">
-                  <Grainient
-                    color1="#0260ED"
-                    color2="#1C76FF"
-                    color3="#0260ED"
-                    timeSpeed={0.95}
-                    colorBalance={0.06}
-                    warpStrength={1.15}
-                    warpFrequency={7.6}
-                    warpSpeed={1.1}
-                    warpAmplitude={14}
-                    className="h-full w-full"
-                  />
+              <div className="relative isolate overflow-hidden rounded-3xl bg-[#22252A] px-8 py-16 text-center text-primary-foreground md:px-16 md:py-20">
+                <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden">
+                  <div className="absolute inset-0 origin-center [transform:translate(0px,0px)_scale(1.15)] md:[transform:translate(-424px,28px)_scale(1.52)]">
+                    <Prism
+                      height={4.5}
+                      baseWidth={3.5}
+                      animationType="3drotate"
+                      glow={1.1}
+                      noise={0.3}
+                      scale={3.3}
+                      colorFrequency={0.7}
+                      hoverStrength={1}
+                      inertia={0.08}
+                    />
+                  </div>
                 </div>
                 <h2 className="mx-auto max-w-3xl text-balance text-3xl font-semibold tracking-tight md:text-5xl">
                   Launch your lending environment with Atlas
@@ -511,7 +512,7 @@ export default function Home() {
                 <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <a
                     href="mailto:partners@folks.finance"
-                    className="group inline-flex items-center gap-2 rounded-full bg-background px-6 py-3 font-medium text-foreground transition-[opacity,transform] duration-200 hover:opacity-90 active:scale-[0.98]"
+                    className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-medium text-[#070912] transition-[opacity,transform] duration-200 hover:opacity-90 active:scale-[0.98]"
                   >
                     Become a partner
                     <HugeiconsIcon

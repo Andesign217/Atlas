@@ -21,7 +21,10 @@
       "Bash(rm -f src/components/grid-scan.tsx)",
       "Bash(curl -sL --max-time 25 -A \"Mozilla/5.0\" \"https://reactbits.dev/r/Grainient-TS-TW\" -o /tmp/grain.json -w \"HTTP %{http_code} | bytes %{size_download}\\\\n\")",
       "Bash(npm uninstall *)",
-      "Bash(node -e \"const p=require\\('./package.json'\\);console.log\\('postprocessing:', p.dependencies.postprocessing||'rimosso ✅'\\);console.log\\('deps:', Object.keys\\(p.dependencies\\).join\\(', '\\)\\)\")"
+      "Bash(node -e \"const p=require\\('./package.json'\\);console.log\\('postprocessing:', p.dependencies.postprocessing||'rimosso ✅'\\);console.log\\('deps:', Object.keys\\(p.dependencies\\).join\\(', '\\)\\)\")",
+      "Bash(curl -sL --max-time 25 -A \"Mozilla/5.0\" \"https://reactbits.dev/r/Prism-TS-TW\" -o /tmp/prism.json -w \"HTTP %{http_code} | bytes %{size_download}\\\\n\")",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)"
     ]
   }
 }
