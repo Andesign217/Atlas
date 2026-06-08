@@ -18,7 +18,7 @@ export function SiteHeader() {
           <AtlasLogo className="h-6 w-auto text-primary" />
         </a>
 
-        <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-sm text-muted-foreground md:flex">
+        <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-sm text-muted-foreground lg:flex">
           {navLinks.map((l) => (
             <a
               key={l.href}
@@ -30,11 +30,11 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <ThemeToggle />
           <a
             href="#contact"
-            className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-medium text-primary-foreground transition-[opacity,transform] duration-200 hover:opacity-90 active:scale-[0.98]"
+            className="group inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 py-3 font-medium text-primary-foreground transition-[opacity,transform] duration-200 hover:opacity-90 active:scale-[0.98]"
           >
             Get in touch
             <HugeiconsIcon

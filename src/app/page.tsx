@@ -28,12 +28,14 @@ import { VaultFlow } from "@/components/vault-flow";
 import { ForbesLogo } from "@/components/forbes-logo";
 import { HeroRays } from "@/components/hero-rays";
 import { WhyLaser } from "@/components/why-laser";
-import Prism from "@/components/prism";
 import { RotatingHeadline } from "@/components/rotating-headline";
+import { BorderBeam } from "@/components/border-beam";
+import { ContactForm } from "@/components/contact-form";
+import { EcosystemFlow } from "@/components/ecosystem-flow";
 
 const stats = [
   ["5+", "years of uninterrupted mainnet operation"],
-  ["$[X]B+", "in lifetime loan volume"],
+  ["$13B", "deposited"],
   ["240K+", "total unique users"],
   ["9", "chains supported"],
 ];
@@ -105,7 +107,7 @@ const builderPoints = [
 ];
 
 const cardHover =
-  "transition duration-[400ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] will-change-transform hover:-translate-y-1";
+  "transition duration-[400ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] will-change-transform hover:-translate-y-1 hover:bg-[color-mix(in_oklab,var(--card),white_8%)]";
 
 export default function Home() {
   return (
@@ -113,7 +115,7 @@ export default function Home() {
       <SiteHeader />
       <main className="flex flex-col">
         {/* ---------- HERO ---------- */}
-        <section className="relative isolate overflow-hidden">
+        <section className="relative isolate flex min-h-screen items-center overflow-hidden">
           {/* Light Rays: altezza 65% della viewport, in alto, full-width */}
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-20 h-[65vh]">
             <HeroRays />
@@ -128,7 +130,7 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[65vh] bg-[linear-gradient(to_bottom,transparent_55%,var(--background)_100%)]"
           />
-          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-6 pb-24 pt-[20vh] text-center md:pt-[22vh]">
+          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-6 py-24 text-center">
             <Reveal immediate>
               <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
                 <RotatingHeadline />
@@ -158,6 +160,15 @@ export default function Home() {
                   />
                 </a>
               </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ---------- ECOSYSTEM FLOW ---------- */}
+        <section className="relative z-10 -mt-20 md:-mt-32 lg:-mt-48">
+          <div className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6">
+            <Reveal y={16}>
+              <EcosystemFlow />
             </Reveal>
           </div>
         </section>
@@ -221,7 +232,7 @@ export default function Home() {
               {modules.map((m, i) => (
                 <Reveal key={m.label} delay={i * 0.05} y={12}>
                   <div
-                    className={`flex items-center gap-3 rounded-xl border border-border bg-card p-4 ${cardHover} hover:border-primary/40`}
+                    className={`flex items-center gap-3 rounded-xl border border-border bg-card p-4 ${cardHover}`}
                   >
                     <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
                       <HugeiconsIcon icon={m.icon} size={20} strokeWidth={2} />
@@ -299,7 +310,7 @@ export default function Home() {
             <div className="mt-14 grid gap-6 md:grid-cols-3">
               {whyCards.map((item, i) => (
                 <Reveal key={item.k} delay={i * 0.08}>
-                  <div className={`h-full rounded-2xl border border-border bg-card/60 p-6 backdrop-blur-md hover:border-primary/40 ${cardHover}`}>
+                  <div className={`h-full rounded-2xl border border-border bg-card/60 p-6 backdrop-blur-md ${cardHover}`}>
                     <h3 className="text-lg font-semibold tracking-tight">
                       {item.k}
                     </h3>
@@ -335,7 +346,7 @@ export default function Home() {
               {useCases.map((u, i) => (
                 <Reveal key={u.title} delay={(i % 3) * 0.08} y={20}>
                   <div
-                    className={`group h-full rounded-2xl border border-border bg-card p-6 hover:border-primary/40 ${cardHover}`}
+                    className={`group h-full rounded-2xl border border-border bg-card p-6 ${cardHover}`}
                   >
                     <div className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary transition-transform duration-[400ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-110">
                       <HugeiconsIcon icon={u.icon} size={24} strokeWidth={2} />
@@ -436,9 +447,9 @@ export default function Home() {
               {builderPoints.map((p, i) => (
                 <Reveal key={p} delay={i * 0.08} y={16}>
                   <li
-                    className={`flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/40 ${cardHover}`}
+                    className={`flex items-center gap-3 rounded-2xl border border-border bg-card p-4 ${cardHover}`}
                   >
-                    <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
                       <HugeiconsIcon icon={ArrowRight01Icon} size={14} strokeWidth={2.5} />
                     </span>
                     <span className="text-sm">{p}</span>
@@ -486,49 +497,16 @@ export default function Home() {
         <section id="contact" className="border-t border-border">
           <div className="mx-auto w-full max-w-7xl px-6 py-24">
             <Reveal y={24}>
-              <div className="relative isolate overflow-hidden rounded-3xl bg-[#22252A] px-8 py-16 text-center text-primary-foreground md:px-16 md:py-20">
-                <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden">
-                  <div className="absolute inset-0 origin-center [transform:translate(0px,0px)_scale(1.15)] md:[transform:translate(-424px,28px)_scale(1.52)]">
-                    <Prism
-                      height={4.5}
-                      baseWidth={3.5}
-                      animationType="3drotate"
-                      glow={1.1}
-                      noise={0.3}
-                      scale={3.3}
-                      colorFrequency={0.7}
-                      hoverStrength={1}
-                      inertia={0.08}
-                    />
-                  </div>
-                </div>
+              <div className="relative rounded-3xl border border-border bg-muted/30 px-8 py-16 text-center md:px-16 md:py-20">
+                <BorderBeam />
                 <h2 className="mx-auto max-w-3xl text-balance text-3xl font-semibold tracking-tight md:text-5xl">
                   Launch your lending environment with Atlas
                 </h2>
-                <p className="mx-auto mt-4 max-w-xl text-balance text-primary-foreground/80">
+                <p className="mx-auto mt-4 max-w-xl text-balance text-muted-foreground">
                   We&apos;re onboarding a select group of curators, institutions and
                   partners ahead of launch. Let&apos;s build together.
                 </p>
-                <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                  <a
-                    href="mailto:partners@folks.finance"
-                    className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-medium text-[#070912] transition-[opacity,transform] duration-200 hover:opacity-90 active:scale-[0.98]"
-                  >
-                    Become a partner
-                    <HugeiconsIcon
-                      icon={ArrowUpRight01Icon}
-                      size={20}
-                      strokeWidth={2}
-                      className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                    />
-                  </a>
-                  <a
-                    href="mailto:investors@folks.finance"
-                    className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary-foreground/10"
-                  >
-                    Investor relations
-                  </a>
-                </div>
+                <ContactForm />
               </div>
             </Reveal>
           </div>

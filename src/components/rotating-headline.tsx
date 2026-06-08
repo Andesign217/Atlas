@@ -23,6 +23,17 @@ export function RotatingHeadline() {
   const [wordIdx, setWordIdx] = useState(0);
   const [text, setText] = useState("");
   const [phase, setPhase] = useState<"typing" | "deleting">("typing");
+  // Inline (desktop ≥md, 2 righe) → "Launch your" scorre con la parola.
+  // Stacked (mobile/tablet, 3 righe) → niente layout animation: testo fisso.
+  const [inline, setInline] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setInline(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     const full = WORDS[wordIdx];
@@ -66,12 +77,12 @@ export function RotatingHeadline() {
 
   return (
     <motion.span
-      layout="position"
+      layout={inline ? "position" : false}
       transition={{ layout: { duration: 0.18, ease: EASE } }}
-      className="flex flex-wrap items-baseline justify-center gap-x-[0.28em] md:inline-flex md:flex-nowrap"
+      className="flex flex-wrap items-baseline justify-center gap-x-[0.28em] lg:inline-flex lg:flex-nowrap"
     >
       <span>Launch your</span>
-      <span className="basis-full text-center md:basis-auto md:text-left">
+      <span className="basis-full text-center lg:basis-auto lg:text-left">
         <span className="whitespace-nowrap text-primary">{text}</span>
         <span
           aria-hidden

@@ -147,3 +147,28 @@ section[id] {
     scroll-behavior: auto;
   }
 }
+
+/* ============================================================
+   Border beam — impulso blu che corre intermittente sul perimetro
+   ============================================================ */
+@keyframes beam-travel {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes beam-flash {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  22% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0;
+  }
+}

@@ -64,12 +64,12 @@ export function VaultFlow() {
           pathLength={100}
           strokeLinecap="round"
           strokeWidth="2.5"
-          strokeDasharray="16 84"
+          strokeDasharray="14 86"
           className="vault-pulse [stroke:var(--primary)]"
           style={{
             animation: "vault-flow 2.4s linear infinite",
             animationDelay: `${i * 0.8}s`,
-            filter: "drop-shadow(0 0 5px var(--primary))",
+            filter: "drop-shadow(0 0 6px rgba(28,118,255,0.7))",
           }}
         />
       ))}
