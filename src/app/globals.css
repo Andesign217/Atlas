@@ -157,18 +157,27 @@ section[id] {
   }
 }
 
-@keyframes beam-flash {
-  0%,
+/* Appare assottigliato → cresce a spessore pieno → si assottiglia fino a sparire,
+   poi resta nascosto ~1.5s (31% di 4.8s) prima di ricomparire */
+@keyframes beam-pulse {
+  0% {
+    opacity: 0;
+    stroke-width: 0.3;
+  }
+  18% {
+    opacity: 1;
+    stroke-width: 2.6;
+  }
+  48% {
+    opacity: 1;
+    stroke-width: 2.6;
+  }
+  69% {
+    opacity: 0;
+    stroke-width: 0.3;
+  }
   100% {
     opacity: 0;
-  }
-  4% {
-    opacity: 1;
-  }
-  22% {
-    opacity: 1;
-  }
-  30% {
-    opacity: 0;
+    stroke-width: 0.3;
   }
 }

@@ -20,6 +20,9 @@ import {
   SourceCodeIcon,
   GithubIcon,
   BookOpen01Icon,
+  CheckmarkCircle02Icon,
+  Alert02Icon,
+  CancelCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -29,12 +32,12 @@ import { ForbesLogo } from "@/components/forbes-logo";
 import { HeroRays } from "@/components/hero-rays";
 import { WhyLaser } from "@/components/why-laser";
 import { RotatingHeadline } from "@/components/rotating-headline";
-import { BorderBeam } from "@/components/border-beam";
+import { Aurora } from "@/components/aurora";
 import { ContactForm } from "@/components/contact-form";
 import { EcosystemFlow } from "@/components/ecosystem-flow";
 
 const stats = [
-  ["5+", "years of uninterrupted mainnet operation"],
+  ["5+", "years of uninterrupted mainnet"],
   ["$13B", "deposited"],
   ["240K+", "total unique users"],
   ["9", "chains supported"],
@@ -51,20 +54,66 @@ const modules = [
   { icon: DashboardSquare01Icon, label: "White-label frontend" },
 ];
 
-const whyCards = [
-  {
-    k: "Custom Lending Environments: Spokes",
-    v: "Create specialized lending environments for any asset class. Configure risk parameters, oracles, interest rate models, liquidations, compliance requirements, and custom modules while maintaining full control.",
-  },
-  {
-    k: "Launch with liquidity from day one: courtesy of the Hubs",
-    v: "Access liquidity from the Atlas Hubs to bootstrap new lending markets without facing the cold-start problem and systemic risks.",
-  },
-  {
-    k: "Curated Capital Allocation: Vaults",
-    v: "Provide a single entry point to your users with Vaults. Liquidity can be routed across approved Spokes according to predefined allocation limits, risk constraints, and rebalancing logic, enabling tailored lending and yield strategies.",
-  },
-];
+// Comparazione Folks Atlas vs Aave vs Morpho (s: "yes" | "warn" | "no")
+const comparison = {
+  protocols: ["Folks Atlas", "Aave", "Morpho"],
+  rows: [
+    {
+      cap: "Launch your own lending environment",
+      cells: [
+        { s: "yes" },
+        { s: "no", note: "DAO / governance approval needed" },
+        { s: "no", note: "Just vaults" },
+      ],
+    },
+    {
+      cap: "Multi-collateral + multi-borrow markets",
+      cells: [
+        { s: "yes" },
+        { s: "yes" },
+        { s: "no", note: "Single collateral / single borrow" },
+      ],
+    },
+    {
+      cap: "Full parameter control",
+      cells: [
+        { s: "yes" },
+        { s: "warn", note: "Limited / governance-driven" },
+        { s: "warn", note: "Limited / fixed after deployment" },
+      ],
+    },
+    {
+      cap: "Active market management after launch",
+      cells: [
+        { s: "yes" },
+        { s: "warn", note: "Governance dependent" },
+        { s: "no", note: "Immutable markets" },
+      ],
+    },
+    {
+      cap: "Native KYC / AML & address whitelisting",
+      cells: [{ s: "yes" }, { s: "no" }, { s: "warn", note: "Limited" }],
+    },
+    {
+      cap: "Privacy & private-chain deployment",
+      cells: [{ s: "yes" }, { s: "no" }, { s: "no" }],
+    },
+    {
+      cap: "White-label solution",
+      cells: [{ s: "yes" }, { s: "no" }, { s: "no" }],
+    },
+    {
+      cap: "Create custom curated yield vaults",
+      cells: [{ s: "yes" }, { s: "no" }, { s: "yes" }],
+    },
+  ],
+} as const;
+
+const STATUS = {
+  yes: { icon: CheckmarkCircle02Icon, className: "text-success" },
+  warn: { icon: Alert02Icon, className: "text-warning" },
+  no: { icon: CancelCircleIcon, className: "text-muted-foreground/60" },
+} as const;
 
 const useCases = [
   {
@@ -130,7 +179,7 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[65vh] bg-[linear-gradient(to_bottom,transparent_55%,var(--background)_100%)]"
           />
-          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-6 py-24 text-center">
+          <div className="relative z-10 mx-auto flex w-full max-w-7xl -translate-y-8 flex-col items-center px-6 py-24 text-center md:-translate-y-12">
             <Reveal immediate>
               <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
                 <RotatingHeadline />
@@ -165,7 +214,7 @@ export default function Home() {
         </section>
 
         {/* ---------- ECOSYSTEM FLOW ---------- */}
-        <section className="relative z-10 -mt-20 md:-mt-32 lg:-mt-48">
+        <section className="relative z-10 -mt-10 md:-mt-20 lg:-mt-28">
           <div className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6">
             <Reveal y={16}>
               <EcosystemFlow />
@@ -192,14 +241,17 @@ export default function Home() {
             </Reveal>
             <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
               {stats.map(([n, l], i) => (
-                <Reveal key={l} delay={i * 0.08} y={16}>
-                  <div className="h-full bg-card px-6 py-8 text-center">
+                <div
+                  key={l}
+                  className="flex h-full flex-col items-center justify-center bg-card px-6 py-8 text-center"
+                >
+                  <Reveal delay={i * 0.08} y={16}>
                     <div className="text-4xl font-semibold tracking-tight text-primary">
                       {n}
                     </div>
                     <div className="mt-2 text-sm text-muted-foreground">{l}</div>
-                  </div>
-                </Reveal>
+                  </Reveal>
+                </div>
               ))}
             </div>
           </div>
@@ -223,7 +275,12 @@ export default function Home() {
                   needs.
                 </p>
                 <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
-                  <HugeiconsIcon icon={UserGroupIcon} size={20} strokeWidth={2} />
+                  <HugeiconsIcon
+                    icon={UserGroupIcon}
+                    size={20}
+                    strokeWidth={2}
+                    className="text-primary"
+                  />
                   Designed for institutions and builders
                 </div>
               </div>
@@ -268,7 +325,12 @@ export default function Home() {
                   rebalancing behind the scenes.
                 </p>
                 <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
-                  <HugeiconsIcon icon={UserGroupIcon} size={20} strokeWidth={2} />
+                  <HugeiconsIcon
+                    icon={UserGroupIcon}
+                    size={20}
+                    strokeWidth={2}
+                    className="text-primary"
+                  />
                   Designed for curators and asset managers
                 </div>
               </div>
@@ -293,33 +355,114 @@ export default function Home() {
             <Reveal>
               <div className="mx-auto max-w-3xl text-center">
                 <p className="text-sm font-medium uppercase tracking-wider text-primary">
-                  Why Atlas
+                  Why Folks Atlas
                 </p>
                 <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-                  Launch with liquidity from day one
+                  Built different, so you can build differently
                 </h2>
                 <p className="mt-4 text-balance text-muted-foreground">
-                  Monolithic money markets concentrate liquidity into a single
-                  set of rules. Modular systems allow customization, but liquidity
-                  becomes fragmented. Atlas introduces a new lending architecture:
-                  shared liquidity at the Hubs, and fully configurable lending
-                  environments at the Spokes.
+                  Atlas combines the liquidity depth of monolithic lending with
+                  the flexibility of modular markets, giving institutions and
+                  builders the tools to launch unique lending environments
+                  tailored to their assets, users, risk models, and compliance
+                  needs.
                 </p>
               </div>
             </Reveal>
-            <div className="mt-14 grid gap-6 md:grid-cols-3">
-              {whyCards.map((item, i) => (
-                <Reveal key={item.k} delay={i * 0.08}>
-                  <div className={`h-full rounded-2xl border border-border bg-card/60 p-6 backdrop-blur-md ${cardHover}`}>
-                    <h3 className="text-lg font-semibold tracking-tight">
-                      {item.k}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {item.v}
-                    </p>
-                  </div>
-                </Reveal>
-              ))}
+
+            {/* Tabella comparativa Folks Atlas vs Aave vs Morpho */}
+            <Reveal y={20} className="mt-14">
+              <div className="overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-md">
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[680px] border-collapse text-left">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="px-5 py-4 text-sm font-medium text-muted-foreground">
+                          Capability
+                        </th>
+                        {comparison.protocols.map((p, i) => (
+                          <th
+                            key={p}
+                            className={`px-5 py-4 text-center text-sm font-semibold ${
+                              i === 0
+                                ? "bg-primary/[0.07] text-primary"
+                                : "text-foreground"
+                            }`}
+                          >
+                            {p}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {comparison.rows.map((row) => (
+                        <tr
+                          key={row.cap}
+                          className="border-b border-border/60 last:border-0"
+                        >
+                          <td className="px-5 py-4 text-sm font-medium text-foreground">
+                            {row.cap}
+                          </td>
+                          {row.cells.map((cell, ci) => {
+                            const st = STATUS[cell.s];
+                            return (
+                              <td
+                                key={ci}
+                                className={`px-5 py-4 align-middle ${
+                                  ci === 0 ? "bg-primary/[0.07]" : ""
+                                }`}
+                              >
+                                <div className="flex flex-col items-center gap-1 text-center">
+                                  <HugeiconsIcon
+                                    icon={st.icon}
+                                    size={22}
+                                    strokeWidth={2}
+                                    className={st.className}
+                                  />
+                                  {"note" in cell && cell.note ? (
+                                    <span className="text-[11px] leading-tight text-muted-foreground">
+                                      {cell.note}
+                                    </span>
+                                  ) : null}
+                                </div>
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Legenda + disclaimer */}
+            <div className="mx-auto mt-6 max-w-4xl">
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <HugeiconsIcon icon={CheckmarkCircle02Icon} size={16} strokeWidth={2} className="text-success" />
+                  Supported
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <HugeiconsIcon icon={Alert02Icon} size={16} strokeWidth={2} className="text-warning" />
+                  Partial / limited
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <HugeiconsIcon icon={CancelCircleIcon} size={16} strokeWidth={2} className="text-muted-foreground/60" />
+                  Not available
+                </span>
+              </div>
+              <p className="mt-4 text-center text-[11px] leading-relaxed text-muted-foreground/70">
+                This comparison is provided for informational purposes and
+                reflects our good-faith reading of each protocol&apos;s publicly
+                available documentation. Lending protocols develop quickly and
+                ship capabilities across multiple products, so some features may
+                change or be delivered differently; we encourage readers to
+                confirm current specifications with each provider. This table is
+                independent and is not affiliated with, endorsed by, or intended
+                to disparage Aave or Morpho; all trademarks belong to their
+                respective owners.
+              </p>
             </div>
           </div>
         </section>
@@ -478,7 +621,9 @@ export default function Home() {
                 financial infrastructure.
               </p>
               <a
-                href="#"
+                href="https://www.forbes.com/councils/forbestechcouncil/2026/05/08/why-institutions-are-quietly-moving-onchain/"
+                target="_blank"
+                rel="noreferrer"
                 className="group mt-8 inline-flex items-center gap-2 font-medium text-primary transition-opacity hover:opacity-80"
               >
                 Read article
@@ -497,16 +642,31 @@ export default function Home() {
         <section id="contact" className="border-t border-border">
           <div className="mx-auto w-full max-w-7xl px-6 py-24">
             <Reveal y={24}>
-              <div className="relative rounded-3xl border border-border bg-muted/30 px-8 py-16 text-center md:px-16 md:py-20">
-                <BorderBeam />
-                <h2 className="mx-auto max-w-3xl text-balance text-3xl font-semibold tracking-tight md:text-5xl">
-                  Launch your lending environment with Atlas
-                </h2>
-                <p className="mx-auto mt-4 max-w-xl text-balance text-muted-foreground">
-                  We&apos;re onboarding a select group of curators, institutions and
-                  partners ahead of launch. Let&apos;s build together.
-                </p>
-                <ContactForm />
+              <div className="relative overflow-hidden rounded-3xl border border-border bg-muted/30 px-8 py-16 text-center md:px-16 md:py-20">
+                {/* Sfondo Aurora (WebGL) ancorato in basso, dietro al contenuto */}
+                <div
+                  className="pointer-events-none absolute inset-0 -z-0"
+                  style={{
+                    transform: "translate(103px, 222px) scale(1.85)",
+                    transformOrigin: "center",
+                  }}
+                >
+                  <Aurora
+                    className="h-full w-full opacity-80"
+                    colorStops={["#1C76FF", "#1C76FF", "#1C76FF"]}
+                    amplitude={0.8}
+                  />
+                </div>
+                <div className="relative z-10">
+                  <h2 className="mx-auto max-w-3xl text-balance text-3xl font-semibold tracking-tight md:text-5xl">
+                    Launch your lending environment with Atlas
+                  </h2>
+                  <p className="mx-auto mt-4 max-w-xl text-balance text-muted-foreground">
+                    We&apos;re onboarding a select group of curators, institutions and
+                    partners ahead of launch. Let&apos;s build together.
+                  </p>
+                  <ContactForm />
+                </div>
               </div>
             </Reveal>
           </div>

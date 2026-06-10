@@ -41,7 +41,7 @@ export function ContactForm() {
         <span className="grid size-12 place-items-center rounded-full bg-primary/15 text-primary">
           <HugeiconsIcon icon={CheckmarkCircle02Icon} size={28} strokeWidth={2} />
         </span>
-        <p className="text-lg font-semibold text-foreground">Thanks — we&apos;ll be in touch.</p>
+        <p className="text-lg font-semibold text-foreground">Thanks, we&apos;ll be in touch.</p>
         <p className="text-sm text-muted-foreground">
           Our team will reach out shortly. {/* placeholder copy */}
         </p>

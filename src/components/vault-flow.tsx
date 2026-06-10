@@ -1,119 +1,183 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
 /**
  * Diagramma animato del flusso di un Vault verso i suoi Spoke.
- * Un deposito (USDC) confluisce nel Vault e viene distribuito su più Spoke:
- * lungo le linee scorre in loop un "pulse" luminoso (CSS, rispetta reduced-motion).
+ * Un deposito (USDC) confluisce nel Vault e viene distribuito su più Spoke.
+ * Stesso linguaggio visivo del flusso "istituzioni": impulsi allungati a
+ * gradiente che scorrono lungo le linee (rAF) e box che si illuminano per
+ * prossimità (proximity glow). Rispetta prefers-reduced-motion.
  */
-const routes = [
-  "M280 72 C 280 150 91 150 91 226", // → Spoke A
-  "M280 72 L 280 226", //               → Spoke B
-  "M280 72 C 280 150 469 150 469 226", // → Spoke C
+
+type Pt = { x: number; y: number };
+
+// Coordinate in spazio 0..100 (preserveAspectRatio none → x e y indipendenti)
+const ORIGIN: Pt = { x: 50, y: 22 };
+const SPOKES = [
+  { label: "Spoke A", conn: { x: 16, y: 78 } },
+  { label: "Spoke B", conn: { x: 50, y: 78 } },
+  { label: "Spoke C", conn: { x: 84, y: 78 } },
 ];
 
-const spokes = [
-  { label: "Spoke A", x: 6, cx: 91 },
-  { label: "Spoke B", x: 195, cx: 280 },
-  { label: "Spoke C", x: 384, cx: 469 },
-];
+const routePath = (a: Pt, b: Pt) => {
+  if (a.x === b.x) return `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
+  const cy = a.y + (b.y - a.y) * 0.5;
+  return `M ${a.x} ${a.y} C ${a.x} ${cy}, ${b.x} ${cy}, ${b.x} ${b.y}`;
+};
+
+const DUR_MS = 2600; // discesa Vault → Spoke (loop)
 
 export function VaultFlow() {
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const pulseRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // box[0] = Vault deposit, box[1..3] = Spoke A/B/C
+  const boxRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const routes = SPOKES.map((s) => routePath(ORIGIN, s.conn));
+  // Punto di "aggancio" di ogni box (dove la linea lo tocca) per il glow di prossimità
+  const conns: Pt[] = [ORIGIN, ...SPOKES.map((s) => s.conn)];
+
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let W = 0,
+      H = 0;
+    let lengths: number[] = [];
+    let connPx: Pt[] = [];
+    const measure = () => {
+      const rb = wrap.getBoundingClientRect();
+      W = rb.width;
+      H = rb.height;
+      lengths = pathRefs.current.map((p) => (p ? p.getTotalLength() : 0));
+      connPx = conns.map((c) => ({ x: (c.x / 100) * W, y: (c.y / 100) * H }));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(wrap);
+
+    if (reduce) {
+      pulseRefs.current.forEach((p) => p && (p.style.display = "none"));
+      return () => ro.disconnect();
+    }
+
+    const FALLOFF = 32; // px: distanza oltre la quale il glow si annulla (stretto → si accende solo all'arrivo del beam)
+
+    let raf = 0;
+    let startT: number | null = null;
+    const tick = (t: number) => {
+      if (startT == null) startT = t;
+      const prog = ((t - startT) % DUR_MS) / DUR_MS; // 0→1 in loop (discesa)
+      // dissolvenza ai due estremi → niente "teletrasporto" al reset
+      const fade = Math.max(0, Math.min(1, prog / 0.12, (1 - prog) / 0.12));
+      const pulsePts: Pt[] = [];
+
+      pathRefs.current.forEach((path, i) => {
+        const pulse = pulseRefs.current[i];
+        if (!path || !pulse || !lengths[i]) return;
+        const len = lengths[i];
+        const s = prog * len;
+        const c = path.getPointAtLength(s);
+        const a1 = path.getPointAtLength(Math.max(0, s - 0.8));
+        const a2 = path.getPointAtLength(Math.min(len, s + 0.8));
+        const cx = (c.x / 100) * W;
+        const cy = (c.y / 100) * H;
+        const ang = Math.atan2(((a2.y - a1.y) / 100) * H, ((a2.x - a1.x) / 100) * W);
+        pulse.style.opacity = fade.toFixed(3);
+        pulse.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%) rotate(${ang}rad)`;
+        pulsePts.push({ x: cx, y: cy });
+      });
+
+      boxRefs.current.forEach((el, i) => {
+        if (!el || !connPx[i]) return;
+        let g = 0;
+        for (const p of pulsePts) {
+          const dist = Math.hypot(connPx[i].x - p.x, connPx[i].y - p.y);
+          g = Math.max(g, 1 - dist / FALLOFF);
+        }
+        g = Math.max(0, g) * fade;
+        if (g > 0.02) {
+          el.style.boxShadow = `0 0 ${(30 * g).toFixed(1)}px rgba(28,118,255,${(0.4 * g).toFixed(3)}), 0 0 ${(60 * g).toFixed(1)}px rgba(28,118,255,${(0.2 * g).toFixed(3)})`;
+          el.style.borderColor = `rgba(28,118,255,${(0.2 + 0.55 * g).toFixed(3)})`;
+        } else {
+          el.style.boxShadow = "";
+          el.style.borderColor = "";
+        }
+      });
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <svg
-      viewBox="0 0 560 292"
-      className="h-auto w-full"
-      role="img"
-      aria-label="A vault deposit in USDC flowing into multiple lending spokes"
-    >
-      {/* Vault deposit box */}
-      <rect x="6" y="6" width="548" height="58" rx="14" className="[fill:var(--muted)]" />
-      <text
-        x="28"
-        y="41"
-        className="font-sans [fill:var(--foreground)]"
-        fontSize="19"
-        fontWeight="600"
+    <div ref={wrapRef} className="relative h-[280px] w-full sm:h-[300px]">
+      {/* Linee di base (Vault → Spoke) */}
+      <svg
+        aria-hidden
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        className="absolute inset-0 h-full w-full"
       >
-        Vault deposit
-      </text>
-      <text
-        x="526"
-        y="41"
-        textAnchor="end"
-        className="font-sans [fill:var(--muted-foreground)]"
-        fontSize="16"
-      >
-        USDC
-      </text>
-
-      {/* Linee di base */}
-      {routes.map((d, i) => (
-        <path
-          key={`base-${i}`}
-          d={d}
-          fill="none"
-          className="[stroke:var(--border)]"
-          strokeWidth="1.5"
-        />
-      ))}
-
-      {/* Pulse animato che scorre dal Vault agli Spoke */}
-      {routes.map((d, i) => (
-        <path
-          key={`pulse-${i}`}
-          d={d}
-          fill="none"
-          pathLength={100}
-          strokeLinecap="round"
-          strokeWidth="2.5"
-          strokeDasharray="14 86"
-          className="vault-pulse [stroke:var(--primary)]"
-          style={{
-            animation: "vault-flow 2.4s linear infinite",
-            animationDelay: `${i * 0.8}s`,
-            filter: "drop-shadow(0 0 6px rgba(28,118,255,0.7))",
-          }}
-        />
-      ))}
-
-      {/* Nodo di origine (Vault) con alone pulsante */}
-      <circle
-        cx="280"
-        cy="72"
-        r="11"
-        className="vault-node [fill:var(--primary)]"
-        style={{
-          transformBox: "fill-box",
-          transformOrigin: "center",
-          animation: "vault-node-pulse 2.4s ease-in-out infinite",
-        }}
-      />
-      <circle cx="280" cy="72" r="4" className="[fill:var(--primary)]" />
-
-      {/* Spoke */}
-      {spokes.map((s) => (
-        <g key={s.label}>
-          <rect
-            x={s.x}
-            y="226"
-            width="170"
-            height="58"
-            rx="12"
-            fillOpacity="0.5"
-            strokeWidth="1"
-            className="[fill:var(--muted)] [stroke:var(--border)]"
+        {routes.map((d, i) => (
+          <path
+            key={i}
+            ref={(el) => {
+              pathRefs.current[i] = el;
+            }}
+            d={d}
+            fill="none"
+            stroke="var(--border)"
+            strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
           />
-          <circle cx={s.cx} cy="226" r="3.5" className="[fill:var(--primary)]" />
-          <text
-            x={s.cx}
-            y="260"
-            textAnchor="middle"
-            className="font-sans [fill:var(--muted-foreground)]"
-            fontSize="15"
-            fontWeight="500"
-          >
-            {s.label}
-          </text>
-        </g>
+        ))}
+      </svg>
+
+      {/* Impulsi allungati a gradiente (uno per linea) */}
+      {routes.map((_, i) => (
+        <div
+          key={i}
+          ref={(el) => {
+            pulseRefs.current[i] = el;
+          }}
+          className="pointer-events-none absolute left-0 top-0 z-0 h-[3px] w-7 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent [box-shadow:0_0_10px_2px_rgba(28,118,255,0.55)]"
+        />
       ))}
-    </svg>
+
+      {/* Vault deposit box (in alto, larghezza piena) */}
+      <div
+        ref={(el) => {
+          boxRefs.current[0] = el;
+        }}
+        className="absolute inset-x-0 top-0 z-[1] flex items-center justify-between rounded-xl border border-border bg-muted px-4 py-3 backdrop-blur-sm"
+      >
+        <span className="text-sm font-semibold text-foreground">Vault deposit</span>
+        <span className="text-sm text-muted-foreground">USDC</span>
+      </div>
+
+      {/* Spoke (in basso) */}
+      {SPOKES.map((s, i) => (
+        <div
+          key={s.label}
+          ref={(el) => {
+            boxRefs.current[i + 1] = el;
+          }}
+          style={{ left: `${s.conn.x}%`, top: `${s.conn.y}%` }}
+          className="absolute z-[1] flex w-[28%] -translate-x-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/50 px-2 py-3 text-center backdrop-blur-sm"
+        >
+          <span className="text-xs font-medium text-muted-foreground sm:text-sm">
+            {s.label}
+          </span>
+        </div>
+      ))}
+    </div>
   );
 }

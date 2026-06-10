@@ -33,7 +33,13 @@
       "Bash(cd \"/Users/rove_/ATLAS Landing Page/node_modules/@hugeicons/core-free-icons\")",
       "Bash(grep -qE '\\\\b__TRACKED_VAR__\\\\b' dist/esm/index.js)",
       "Bash(echo 'OK  __TRACKED_VAR__')",
-      "Bash(echo '--  __TRACKED_VAR__')"
+      "Bash(echo '--  __TRACKED_VAR__')",
+      "WebFetch(domain:docs.google.com)",
+      "WebFetch(domain:doc-0k-78-docstext.googleusercontent.com)",
+      "Bash(curl -sL \"https://docs.google.com/document/d/1dwKzlfOGtRMCUDoHWrlrbNosVndkBJoDjGvaxJOkx4o/export?format=txt\" -o /tmp/whyatlas.txt -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(node -e \"const i=require\\('@hugeicons/core-free-icons'\\); const k=Object.keys\\(i\\); ['CheckmarkCircle02Icon','Tick02Icon','CheckmarkBadge01Icon','Cancel01Icon','CancelCircleIcon','MultiplicationSignCircleIcon','Alert02Icon','AlertCircleIcon','AlertDiamondIcon'].forEach\\(n=>console.log\\(n, k.includes\\(n\\)\\)\\);\")",
+      "Bash(git commit -q -m 'Checkpoint: WHY ATLAS comparison table, Aurora CTA, refined flows *)",
+      "Bash(git tag *)"
     ]
   }
 }

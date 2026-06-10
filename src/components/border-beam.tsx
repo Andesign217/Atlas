@@ -19,15 +19,15 @@ export function BorderBeam() {
         rx="24"
         ry="24"
         stroke="var(--primary)"
-        strokeWidth="2"
+        strokeWidth="2.6"
         strokeLinecap="round"
         pathLength={100}
-        strokeDasharray="14 86"
+        strokeDasharray="2.5 97.5"
         className="motion-reduce:hidden"
         style={{
           animation:
-            "beam-travel 13s linear infinite, beam-flash 8s ease-in-out infinite",
-          filter: "drop-shadow(0 0 6px rgba(28,118,255,0.7))",
+            "beam-travel 7s linear infinite, beam-pulse 3.6s ease-in-out infinite",
+          filter: "drop-shadow(0 0 7px rgba(28,118,255,0.85))",
         }}
       />
     </svg>

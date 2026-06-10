@@ -14,11 +14,11 @@ import {
 type Pt = { x: number; y: number };
 
 // Coordinate in spazio 0..100. h = layout orizzontale (desktop), v = verticale (tablet/mobile)
-const FOLKS = { h: { x: 4, y: 50 }, v: { x: 50, y: 5 } };
-const USERS = { h: { x: 96, y: 50 }, v: { x: 50, y: 95 } };
+const FOLKS = { h: { x: 4, y: 50 }, v: { x: 50, y: 2 } };
+const USERS = { h: { x: 96, y: 50 }, v: { x: 50, y: 98 } };
 const NODES = [
   { icon: ExchangeIcon, label: "Exchanges", h: { x: 30, y: 15 }, v: { x: 28, y: 22 } },
-  { icon: BlockchainIcon, label: "Fintechs", h: { x: 30, y: 50 }, v: { x: 72, y: 36 } },
+  { icon: BlockchainIcon, label: "Fintechs", h: { x: 49, y: 50 }, v: { x: 72, y: 36 } },
   { icon: Building06Icon, label: "Institutions", h: { x: 30, y: 85 }, v: { x: 28, y: 50 } },
   { icon: BankIcon, label: "Banks", h: { x: 68, y: 30 }, v: { x: 72, y: 64 } },
   { icon: PiggyBankIcon, label: "Asset Managers", h: { x: 68, y: 70 }, v: { x: 28, y: 78 } },
@@ -26,9 +26,14 @@ const NODES = [
 
 const routePath = (a: Pt, m: Pt, b: Pt, vertical: boolean) => {
   if (vertical) {
-    const c1 = a.y + (m.y - a.y) * 0.5;
-    const c2 = m.y + (b.y - m.y) * 0.5;
-    return `M ${a.x} ${a.y} C ${a.x} ${c1}, ${m.x} ${c1}, ${m.x} ${m.y} C ${m.x} ${c2}, ${b.x} ${c2}, ${b.x} ${b.y}`;
+    // Spline Catmull-Rom attraverso [a, m, b]: curve morbide con continuità C1
+    // al nodo (niente curvature brusche quando il nodo è vicino a un estremo).
+    const k = 1 / 6;
+    const cp1 = { x: a.x + (m.x - a.x) * k, y: a.y + (m.y - a.y) * k };
+    const cp2 = { x: m.x - (b.x - a.x) * k, y: m.y - (b.y - a.y) * k };
+    const cp3 = { x: m.x + (b.x - a.x) * k, y: m.y + (b.y - a.y) * k };
+    const cp4 = { x: b.x - (b.x - m.x) * k, y: b.y - (b.y - m.y) * k };
+    return `M ${a.x} ${a.y} C ${cp1.x} ${cp1.y}, ${cp2.x} ${cp2.y}, ${m.x} ${m.y} C ${cp3.x} ${cp3.y}, ${cp4.x} ${cp4.y}, ${b.x} ${b.y}`;
   }
   const c1 = a.x + (m.x - a.x) * 0.5;
   const c2 = m.x + (b.x - m.x) * 0.5;
@@ -155,7 +160,7 @@ export function EcosystemFlow() {
       ref={wrapRef}
       className={`relative mx-auto w-full ${
         vertical
-          ? "h-[540px] max-w-md sm:max-w-lg md:max-w-3xl"
+          ? "h-[640px] max-w-md sm:h-[680px] sm:max-w-lg md:max-w-3xl"
           : "h-[460px] max-w-6xl"
       }`}
     >
@@ -203,7 +208,7 @@ export function EcosystemFlow() {
           className="absolute z-[1] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 whitespace-nowrap rounded-full border border-border bg-card px-3.5 py-2 backdrop-blur-sm"
         >
           {n.type === "folks" ? (
-            <span className="text-sm font-semibold">Folks</span>
+            <span className="text-sm font-semibold">Folks Atlas</span>
           ) : n.type === "users" ? (
             <>
               <HugeiconsIcon icon={UserGroupIcon} size={18} strokeWidth={2} />
