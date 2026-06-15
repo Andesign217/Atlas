@@ -17,12 +17,9 @@ import {
   LockKeyIcon,
   Target01Icon,
   UserGroupIcon,
-  SourceCodeIcon,
-  GithubIcon,
-  BookOpen01Icon,
-  CheckmarkCircle02Icon,
-  Alert02Icon,
-  CancelCircleIcon,
+  Tick02Icon,
+  MinusSignIcon,
+  Cancel01Icon,
 } from "@hugeicons/core-free-icons";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -32,15 +29,15 @@ import { ForbesLogo } from "@/components/forbes-logo";
 import { HeroRays } from "@/components/hero-rays";
 import { WhyLaser } from "@/components/why-laser";
 import { RotatingHeadline } from "@/components/rotating-headline";
-import { Aurora } from "@/components/aurora";
+import { SolarFlow } from "@/components/solar-flow";
 import { ContactForm } from "@/components/contact-form";
 import { EcosystemFlow } from "@/components/ecosystem-flow";
 
 const stats = [
-  ["5+", "years of uninterrupted mainnet"],
-  ["$13B", "deposited"],
+  ["5+ years", "of uninterrupted mainnet"],
+  ["$13B+", "cumulative deposits"],
   ["240K+", "total unique users"],
-  ["9", "chains supported"],
+  ["9 chains", "supported"],
 ];
 
 const modules = [
@@ -99,6 +96,14 @@ const comparison = {
       cells: [{ s: "yes" }, { s: "no" }, { s: "no" }],
     },
     {
+      cap: "RWA-specific lending markets",
+      cells: [
+        { s: "yes" },
+        { s: "warn", note: "General-purpose markets, not issuer-controlled" },
+        { s: "warn", note: "Isolated markets, but limited flexibility" },
+      ],
+    },
+    {
       cap: "White-label solution",
       cells: [{ s: "yes" }, { s: "no" }, { s: "no" }],
     },
@@ -109,10 +114,11 @@ const comparison = {
   ],
 } as const;
 
+// Marker "pieni": cerchio colorato + glifo. Giallo → glifo scuro per contrasto.
 const STATUS = {
-  yes: { icon: CheckmarkCircle02Icon, className: "text-success" },
-  warn: { icon: Alert02Icon, className: "text-warning" },
-  no: { icon: CancelCircleIcon, className: "text-muted-foreground/60" },
+  yes: { glyph: Tick02Icon, circle: "bg-success", glyphColor: "text-white" },
+  warn: { glyph: MinusSignIcon, circle: "bg-warning", glyphColor: "text-black/80" },
+  no: { glyph: Cancel01Icon, circle: "bg-[#8a8d93]", glyphColor: "text-white" },
 } as const;
 
 const useCases = [
@@ -138,21 +144,14 @@ const useCases = [
   },
   {
     icon: LockKeyIcon,
-    title: "Private lending",
-    desc: "Formalise off-chain agreements on-chain, with under-collateralised options.",
+    title: "RWA lending",
+    desc: "Bring real-world collateral onchain with configurable credit terms, risk controls, and borrower permissions.",
   },
   {
     icon: Target01Icon,
     title: "Intent-based lending",
     desc: "Fixed-term, fixed-rate positions matched between lenders and borrowers.",
   },
-];
-
-const builderPoints = [
-  "Deploy your own lending use case in days instead of months or years",
-  "Host a white-label frontend under your own brand and domain",
-  "Embed yield directly into your product",
-  "Manage capital allocation across differentiated strategies",
 ];
 
 const cardHover =
@@ -183,15 +182,14 @@ export default function Home() {
             <Reveal immediate>
               <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
                 <RotatingHeadline />
-                <span className="block">product onchain</span>
+                <span className="block">use case onchain</span>
               </h1>
             </Reveal>
             <Reveal immediate delay={0.16}>
               <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground md:text-xl">
                 Folks Atlas enables institutions and builders to deploy
-                fully-configurable lending environments for any type of asset
-                without the need of rebuilding the stack. Speak with our team to
-                explore a tailored integration.
+                fully-configurable lending environments for any type of asset.
+                Speak with our team to explore a tailored integration.
               </p>
             </Reveal>
             <Reveal immediate delay={0.24}>
@@ -319,8 +317,8 @@ export default function Home() {
                   Curated yield, one click away for your users
                 </h2>
                 <p className="mt-4 text-muted-foreground">
-                  Curators can package approved Spokes, allocation targets, and
-                  risk controls into a single Vault. Users deposit once and earn
+                  Package allocation targets, risk controls, and tailored
+                  strategies into a single Vault. End users deposit once and earn
                   yield automatically, while curators manage allocations and
                   rebalancing behind the scenes.
                 </p>
@@ -349,7 +347,12 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[201%] opacity-30 mix-blend-screen [mask-image:linear-gradient(to_bottom,transparent_0%,#000_15%,#000_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,#000_15%,#000_100%)]"
           >
-            <WhyLaser />
+            <div
+              className="h-full w-full"
+              style={{ transform: "translateX(-269px)", transformOrigin: "center" }}
+            >
+              <WhyLaser />
+            </div>
           </div>
           <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24">
             <Reveal>
@@ -377,13 +380,13 @@ export default function Home() {
                   <table className="w-full min-w-[680px] border-collapse text-left">
                     <thead>
                       <tr className="border-b border-border">
-                        <th className="px-5 py-4 text-sm font-medium text-muted-foreground">
+                        <th className="px-5 py-6 text-sm font-medium text-muted-foreground">
                           Capability
                         </th>
                         {comparison.protocols.map((p, i) => (
                           <th
                             key={p}
-                            className={`px-5 py-4 text-center text-sm font-semibold ${
+                            className={`px-5 py-6 text-center text-sm font-semibold ${
                               i === 0
                                 ? "bg-primary/[0.07] text-primary"
                                 : "text-foreground"
@@ -400,28 +403,33 @@ export default function Home() {
                           key={row.cap}
                           className="border-b border-border/60 last:border-0"
                         >
-                          <td className="px-5 py-4 text-sm font-medium text-foreground">
+                          <td className="px-5 py-6 text-sm font-medium text-foreground">
                             {row.cap}
                           </td>
                           {row.cells.map((cell, ci) => {
                             const st = STATUS[cell.s];
+                            const note = "note" in cell ? cell.note : null;
+                            // Ogni cella mostra la propria icona + eventuale nota
                             return (
                               <td
                                 key={ci}
-                                className={`px-5 py-4 align-middle ${
+                                className={`px-5 py-6 align-middle ${
                                   ci === 0 ? "bg-primary/[0.07]" : ""
                                 }`}
                               >
-                                <div className="flex flex-col items-center gap-1 text-center">
-                                  <HugeiconsIcon
-                                    icon={st.icon}
-                                    size={22}
-                                    strokeWidth={2}
-                                    className={st.className}
-                                  />
-                                  {"note" in cell && cell.note ? (
-                                    <span className="text-[11px] leading-tight text-muted-foreground">
-                                      {cell.note}
+                                <div className="flex flex-col items-center gap-1.5 text-center">
+                                  <span
+                                    className={`grid size-5 place-items-center rounded-full ${st.circle} ${st.glyphColor}`}
+                                  >
+                                    <HugeiconsIcon
+                                      icon={st.glyph}
+                                      size={12}
+                                      strokeWidth={3.5}
+                                    />
+                                  </span>
+                                  {note ? (
+                                    <span className="text-[12px] leading-tight text-muted-foreground">
+                                      {note}
                                     </span>
                                   ) : null}
                                 </div>
@@ -440,15 +448,21 @@ export default function Home() {
             <div className="mx-auto mt-6 max-w-4xl">
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5">
-                  <HugeiconsIcon icon={CheckmarkCircle02Icon} size={16} strokeWidth={2} className="text-success" />
+                  <span className="grid size-5 place-items-center rounded-full bg-success text-white">
+                    <HugeiconsIcon icon={Tick02Icon} size={12} strokeWidth={3.5} />
+                  </span>
                   Supported
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <HugeiconsIcon icon={Alert02Icon} size={16} strokeWidth={2} className="text-warning" />
+                  <span className="grid size-5 place-items-center rounded-full bg-warning text-black/80">
+                    <HugeiconsIcon icon={MinusSignIcon} size={12} strokeWidth={3.5} />
+                  </span>
                   Partial / limited
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <HugeiconsIcon icon={CancelCircleIcon} size={16} strokeWidth={2} className="text-muted-foreground/60" />
+                  <span className="grid size-5 place-items-center rounded-full bg-[#8a8d93] text-white">
+                    <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={3.5} />
+                  </span>
                   Not available
                 </span>
               </div>
@@ -476,12 +490,13 @@ export default function Home() {
                   Use cases
                 </p>
                 <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-                  One protocol, every lending market
+                  What will you build?
                 </h2>
                 <p className="mt-4 text-muted-foreground">
                   From permissionless lending markets to permissioned
-                  institutional venues and real-world assets, configure a Spoke
-                  for any need.
+                  institutional venues and real-world assets, Folks Atlas lets you
+                  configure a Spoke for any need and unlock lending use cases that
+                  weren&apos;t previously possible onchain.
                 </p>
               </div>
             </Reveal>
@@ -504,102 +519,6 @@ export default function Home() {
                 </Reveal>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* ---------- RESEARCH ---------- */}
-        <section className="border-t border-border bg-muted/30">
-          <div className="mx-auto w-full max-w-7xl px-6 py-24">
-            <Reveal>
-              <div className="flex flex-col items-start gap-8 rounded-3xl border border-border bg-card p-8 md:flex-row md:items-center md:p-12">
-                <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
-                  <HugeiconsIcon icon={BookOpen01Icon} size={28} strokeWidth={2} />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium uppercase tracking-wider text-primary">
-                    Research
-                  </p>
-                  <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
-                    Onchain Lending: State of the Art
-                  </h2>
-                  <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                    We&apos;ve spent over five years building lending products
-                    onchain and studying the architectures behind every major
-                    lending protocol. This report explores the models, trade-offs,
-                    and innovations shaping the future of onchain lending. Read it
-                    to understand what we&apos;re building and where we&apos;re
-                    coming from, and why it may matter for you.
-                  </p>
-                </div>
-                <a
-                  href="#"
-                  className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:bg-muted"
-                >
-                  Read report
-                  <HugeiconsIcon
-                    icon={ArrowRight01Icon}
-                    size={18}
-                    strokeWidth={2}
-                    className="transition-transform duration-200 group-hover:translate-x-1"
-                  />
-                </a>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ---------- FOR BUILDERS ---------- */}
-        <section id="builders" className="border-t border-border">
-          <div className="mx-auto grid w-full max-w-7xl items-center gap-14 px-6 py-24 lg:grid-cols-2">
-            <Reveal y={24}>
-              <div>
-                <p className="text-sm font-medium uppercase tracking-wider text-primary">
-                  For builders
-                </p>
-                <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-                  Ship lending products, not infrastructure
-                </h2>
-                <p className="mt-4 text-muted-foreground">
-                  Focus on your core business and users while Atlas handles the
-                  lending engine. Deploy, customize and integrate with developer
-                  tooling.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <a
-                    href="https://docs.folks.finance"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-[opacity,transform] duration-200 hover:opacity-90 active:scale-[0.98]"
-                  >
-                    <HugeiconsIcon icon={SourceCodeIcon} size={18} strokeWidth={2} />
-                    Read the docs
-                  </a>
-                  <a
-                    href="https://github.com/Folks-Finance"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition-colors hover:bg-muted"
-                  >
-                    <HugeiconsIcon icon={GithubIcon} size={18} strokeWidth={2} />
-                    GitHub
-                  </a>
-                </div>
-              </div>
-            </Reveal>
-            <ul className="space-y-4">
-              {builderPoints.map((p, i) => (
-                <Reveal key={p} delay={i * 0.08} y={16}>
-                  <li
-                    className={`flex items-center gap-3 rounded-2xl border border-border bg-card p-4 ${cardHover}`}
-                  >
-                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-                      <HugeiconsIcon icon={ArrowRight01Icon} size={14} strokeWidth={2.5} />
-                    </span>
-                    <span className="text-sm">{p}</span>
-                  </li>
-                </Reveal>
-              ))}
-            </ul>
           </div>
         </section>
 
@@ -642,20 +561,19 @@ export default function Home() {
         <section id="contact" className="border-t border-border">
           <div className="mx-auto w-full max-w-7xl px-6 py-24">
             <Reveal y={24}>
-              <div className="relative overflow-hidden rounded-3xl border border-border bg-muted/30 px-8 py-16 text-center md:px-16 md:py-20">
-                {/* Sfondo Aurora (WebGL) ancorato in basso, dietro al contenuto */}
-                <div
-                  className="pointer-events-none absolute inset-0 -z-0"
-                  style={{
-                    transform: "translate(103px, 222px) scale(1.85)",
-                    transformOrigin: "center",
-                  }}
-                >
-                  <Aurora
-                    className="h-full w-full opacity-80"
-                    colorStops={["#1C76FF", "#1C76FF", "#1C76FF"]}
-                    amplitude={0.8}
-                  />
+              {/* Pannello a tema invertito rispetto alla pagina → forte contrasto */}
+              <div className="surface-invert relative overflow-hidden rounded-3xl border border-border bg-card px-8 py-16 text-center text-foreground md:px-16 md:py-20">
+                {/* Sfondo "sistema solare" minimal, dietro al contenuto */}
+                <div className="pointer-events-none absolute inset-0 -z-0 opacity-80">
+                  <div
+                    className="h-full w-full"
+                    style={{
+                      transform: "translate(231px, 115px) rotate(-11deg) scale(1.59)",
+                      transformOrigin: "center",
+                    }}
+                  >
+                    <SolarFlow />
+                  </div>
                 </div>
                 <div className="relative z-10">
                   <h2 className="mx-auto max-w-3xl text-balance text-3xl font-semibold tracking-tight md:text-5xl">

@@ -48,6 +48,47 @@
   --radius: var(--radius-lg);
 }
 
+/* Rimappa i semantici anche sotto .dark: i token semantici sono indiretti
+   (es. --card: var(--card-background-100)) e vengono risolti dove sono
+   dichiarati. Senza questo blocco, un .dark ANNIDATO cambierebbe solo i token
+   grezzi ma erediterebbe i semantici calcolati a :root (chiaro). Ridichiarandoli
+   qui, ogni sotto-albero .dark risolve i semantici con i propri token scuri. */
+.dark {
+  --background: var(--base-background-100);
+  --foreground: var(--base-foreground-100);
+
+  --primary: var(--primary-background-100);
+  --primary-foreground: var(--primary-foreground-100);
+
+  --secondary: var(--secondary-background-100);
+  --secondary-foreground: var(--secondary-foreground-100);
+
+  --accent: var(--accent-background-100);
+  --accent-foreground: var(--accent-foreground-100);
+
+  --muted: var(--muted-background-100);
+  --muted-foreground: var(--muted-foreground-100);
+
+  --card: var(--card-background-100);
+  --card-foreground: var(--card-foreground-100);
+
+  --popover: var(--popover-background-100);
+  --popover-foreground: var(--popover-foreground-100);
+
+  --destructive: var(--destructive-background-100);
+  --destructive-foreground: var(--destructive-foreground-100);
+
+  --success: var(--success-background-100);
+  --success-foreground: var(--success-foreground-100);
+
+  --warning: var(--warning-background-100);
+  --warning-foreground: var(--warning-foreground-100);
+
+  --border: var(--border-100);
+  --input: var(--input-100);
+  --ring: var(--primary-background-100);
+}
+
 /* ============================================================
    Espone i token a Tailwind v4 come utility (@theme inline)
    → bg-primary, text-muted-foreground, rounded-2xl, ecc.
@@ -89,6 +130,42 @@
    vincono sulle utility di Tailwind (@layer utilities) e sovrascrivono
    i border-color personalizzati (es. border-primary-foreground/20).
    ============================================================ */
+/* ============================================================
+   Pannello a tema INVERTITO rispetto alla pagina → forte contrasto
+   in entrambi i temi (scuro su pagina chiara, chiaro su pagina scura).
+   Valori semantici impostati come letterali per evitare l'indiretto dei
+   raw token (che seguirebbe il tema della pagina).
+   ============================================================ */
+.surface-invert {
+  /* pagina CHIARA → pannello SCURO */
+  --background: #09090a;
+  --foreground: #f0f3f7;
+  --card: #111213;
+  --card-foreground: #f0f3f7;
+  --muted: #22252a;
+  --muted-foreground: #bdbfc4;
+  --border: #22252a;
+  --input: #22252a;
+  --primary: #1c76ff;
+  --primary-foreground: #f0f3f7;
+  --ring: #1c76ff;
+}
+
+.dark .surface-invert {
+  /* pagina SCURA → pannello CHIARO */
+  --background: #f0f3f7;
+  --foreground: #09090a;
+  --card: #e6edf7;
+  --card-foreground: #09090a;
+  --muted: #cfd8e5;
+  --muted-foreground: #3c3e41;
+  --border: #cfd8e5;
+  --input: #cfd8e5;
+  --primary: #0260ed;
+  --primary-foreground: #f0f3f7;
+  --ring: #0260ed;
+}
+
 @layer base {
   * {
     border-color: var(--border);
@@ -154,6 +231,32 @@ section[id] {
 @keyframes beam-travel {
   to {
     stroke-dashoffset: -100;
+  }
+}
+
+/* Stelle lontane: glow blu intermittente (twinkle).
+   Spegnimento totale (opacity 0) con pausa di buio prima di riaccendersi. */
+@keyframes star-twinkle {
+  0%,
+  18% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  82%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-twinkle {
+    animation: none !important;
+    opacity: 0.4 !important;
   }
 }
 

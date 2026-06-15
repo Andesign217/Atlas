@@ -34,6 +34,8 @@ export function ContactForm() {
 
   const inputClass =
     "w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none backdrop-blur-md transition-colors focus:bg-background/90";
+  // pl-4 allinea il testo del titolo con il testo dentro la casella (px-4)
+  const labelClass = "mb-1.5 block pl-4 text-sm font-medium text-foreground";
 
   if (sent) {
     return (
@@ -41,9 +43,9 @@ export function ContactForm() {
         <span className="grid size-12 place-items-center rounded-full bg-primary/15 text-primary">
           <HugeiconsIcon icon={CheckmarkCircle02Icon} size={28} strokeWidth={2} />
         </span>
-        <p className="text-lg font-semibold text-foreground">Thanks, we&apos;ll be in touch.</p>
+        <p className="text-lg font-semibold text-foreground">Thanks for your interest.</p>
         <p className="text-sm text-muted-foreground">
-          Our team will reach out shortly. {/* placeholder copy */}
+          The team will be in touch shortly.
         </p>
       </div>
     );
@@ -55,43 +57,70 @@ export function ContactForm() {
       className="mx-auto mt-10 grid w-full max-w-xl gap-3 text-left"
     >
       <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label htmlFor="name" className={labelClass}>
+            Full name
+          </label>
+          <input
+            id="name"
+            type="text"
+            value={fields.name}
+            onChange={set("name")}
+            required
+            placeholder="Satoshi Nakamoto"
+            aria-label="Full name"
+            className={inputClass}
+          />
+        </div>
+        <div>
+          <label htmlFor="email" className={labelClass}>
+            Work email
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={fields.email}
+            onChange={set("email")}
+            required
+            placeholder="satoshi@gmail.com"
+            aria-label="Work email"
+            className={inputClass}
+          />
+        </div>
+      </div>
+      <div>
+        <label htmlFor="company" className={labelClass}>
+          What&apos;s your company website?
+        </label>
         <input
+          id="company"
           type="text"
-          value={fields.name}
-          onChange={set("name")}
+          value={fields.company}
+          onChange={set("company")}
           required
-          placeholder="Full name"
-          aria-label="Full name"
-          className={inputClass}
-        />
-        <input
-          type="email"
-          value={fields.email}
-          onChange={set("email")}
-          required
-          placeholder="Work email"
-          aria-label="Work email"
+          placeholder="www.bitcoin.org"
+          aria-label="Company website"
           className={inputClass}
         />
       </div>
-      <input
-        type="text"
-        value={fields.company}
-        onChange={set("company")}
-        required
-        placeholder="What's your company website?"
-        aria-label="Company website"
-        className={inputClass}
-      />
-      <textarea
-        value={fields.message}
-        onChange={set("message")}
-        required
-        rows={4}
-        placeholder="Describe your use case (In a couple of sentences, please provide context on what you are interested in Folks Atlas for)"
-        aria-label="Describe your use case"
-        className={`${inputClass} resize-none`}
-      />
+      <div>
+        <label htmlFor="usecase" className={labelClass}>
+          Describe your use case
+        </label>
+        <p className="mb-2 mt-[-2px] pl-4 text-xs text-muted-foreground">
+          {"In a couple of sentences, please share what you're interested in building with Folks Atlas"}
+        </p>
+        <textarea
+          id="usecase"
+          value={fields.message}
+          onChange={set("message")}
+          required
+          rows={4}
+          placeholder="I'd like to explore using Folks Atlas to launch a looping strategy market for our LST, enabling users to access leveraged yield opportunities in a configurable and controlled lending environment."
+          aria-label="Describe your use case"
+          className={`${inputClass} resize-none`}
+        />
+      </div>
       <button
         type="submit"
         disabled={!allFilled}

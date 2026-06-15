@@ -39,7 +39,15 @@
       "Bash(curl -sL \"https://docs.google.com/document/d/1dwKzlfOGtRMCUDoHWrlrbNosVndkBJoDjGvaxJOkx4o/export?format=txt\" -o /tmp/whyatlas.txt -w \"HTTP %{http_code}\\\\n\")",
       "Bash(node -e \"const i=require\\('@hugeicons/core-free-icons'\\); const k=Object.keys\\(i\\); ['CheckmarkCircle02Icon','Tick02Icon','CheckmarkBadge01Icon','Cancel01Icon','CancelCircleIcon','MultiplicationSignCircleIcon','Alert02Icon','AlertCircleIcon','AlertDiamondIcon'].forEach\\(n=>console.log\\(n, k.includes\\(n\\)\\)\\);\")",
       "Bash(git commit -q -m 'Checkpoint: WHY ATLAS comparison table, Aurora CTA, refined flows *)",
-      "Bash(git tag *)"
+      "Bash(git tag *)",
+      "Bash(curl -sL -o /dev/null -w \"HTTP %{http_code}  size=%{size_download}\\\\n\" https://folks-atlas.vercel.app)",
+      "Bash(curl -sL https://folks-atlas.vercel.app)",
+      "Bash(curl -sL -o /dev/null -w \"prod HTTP %{http_code}\\\\n\" https://folks-atlas.vercel.app)",
+      "Bash(curl -sL -o /dev/null -w \"prod %{http_code}\\\\n\" https://folks-atlas.vercel.app)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(pkill -f \"next-server\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(git commit -q -m 'Form field titles + aligned labels, fix CTA beam seam disappearance, ecosystem flow airier + aligned nodes, comparison icons restored, footer full-width separator *)"
     ]
   }
 }

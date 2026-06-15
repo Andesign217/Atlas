@@ -81,7 +81,7 @@ export function RotatingHeadline() {
       transition={{ layout: { duration: 0.18, ease: EASE } }}
       className="flex flex-wrap items-baseline justify-center gap-x-[0.28em] lg:inline-flex lg:flex-nowrap"
     >
-      <span>Launch your</span>
+      <span className="whitespace-nowrap">Launch your</span>
       <span className="basis-full text-center lg:basis-auto lg:text-left">
         <span className="whitespace-nowrap text-primary">{text}</span>
         <span

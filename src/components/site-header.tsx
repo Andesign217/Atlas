@@ -7,7 +7,6 @@ const navLinks = [
   { label: "Protocol", href: "#spokes" },
   { label: "Why Atlas", href: "#why" },
   { label: "Use cases", href: "#use-cases" },
-  { label: "Builders", href: "#builders" },
 ];
 
 export function SiteHeader() {

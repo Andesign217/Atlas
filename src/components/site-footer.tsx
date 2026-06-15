@@ -32,7 +32,7 @@ const socials = [
 export function SiteFooter() {
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto w-full max-w-7xl px-6 py-16">
+      <div className="mx-auto w-full max-w-7xl px-6 pb-12 pt-16">
         <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr]">
           <div>
             <AtlasLogo className="h-6 w-auto text-primary" />
@@ -80,8 +80,11 @@ export function SiteFooter() {
             </div>
           ))}
         </div>
+      </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-muted-foreground md:flex-row">
+      {/* Separazione full-width + riga copyright con padding simmetrico */}
+      <div className="border-t border-border">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground md:flex-row">
           <span>© 2026 Folks Finance. All rights reserved.</span>
           <span>Folks Atlas - infrastructure for lending.</span>
         </div>
