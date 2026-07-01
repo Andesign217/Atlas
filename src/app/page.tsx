@@ -14,7 +14,7 @@ import {
   DashboardSquare01Icon,
   RepeatIcon,
   SquareLock02Icon,
-  LockKeyIcon,
+  GoldIngotsIcon,
   Target01Icon,
   UserGroupIcon,
   Tick02Icon,
@@ -31,6 +31,7 @@ import { WhyLaser } from "@/components/why-laser";
 import { RotatingHeadline } from "@/components/rotating-headline";
 import { SolarFlow } from "@/components/solar-flow";
 import { ContactForm } from "@/components/contact-form";
+import { PartnersMarquee } from "@/components/partners-marquee";
 import { EcosystemFlow } from "@/components/ecosystem-flow";
 
 const stats = [
@@ -143,7 +144,7 @@ const useCases = [
     desc: "Closed environments for institutions and banks, with access control and private deployments.",
   },
   {
-    icon: LockKeyIcon,
+    icon: GoldIngotsIcon,
     title: "RWA lending",
     desc: "Bring real-world collateral onchain with configurable credit terms, risk controls, and borrower permissions.",
   },
@@ -182,14 +183,15 @@ export default function Home() {
             <Reveal immediate>
               <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
                 <RotatingHeadline />
-                <span className="block">use case onchain</span>
+                <span className="block">product onchain</span>
               </h1>
             </Reveal>
             <Reveal immediate delay={0.16}>
               <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground md:text-xl">
                 Folks Atlas enables institutions and builders to deploy
-                fully-configurable lending environments for any type of asset.
-                Speak with our team to explore a tailored integration.
+                fully-configurable lending environments for any scale or
+                sophistication. Speak with our team to explore a tailored
+                integration.
               </p>
             </Reveal>
             <Reveal immediate delay={0.24}>
@@ -231,10 +233,6 @@ export default function Home() {
                 <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
                   Built on battle-tested foundations
                 </h2>
-                <p className="mt-4 text-balance text-muted-foreground">
-                  Atlas is the next generation of Folks Finance, opened up for
-                  everyone to build on.
-                </p>
               </div>
             </Reveal>
             <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
@@ -283,18 +281,26 @@ export default function Home() {
                 </div>
               </div>
             </Reveal>
-            <div className="grid gap-3 sm:grid-cols-2">
+            {/* Griglia a hairline unificata: più pulita e moderna dei box separati */}
+            <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
               {modules.map((m, i) => (
-                <Reveal key={m.label} delay={i * 0.05} y={12}>
-                  <div
-                    className={`flex items-center gap-3 rounded-xl border border-border bg-card p-4 ${cardHover}`}
-                  >
-                    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
-                      <HugeiconsIcon icon={m.icon} size={20} strokeWidth={2} />
-                    </span>
-                    <span className="text-sm font-medium">{m.label}</span>
-                  </div>
-                </Reveal>
+                <div
+                  key={m.label}
+                  className="group relative overflow-hidden bg-card p-5 transition-colors duration-300 hover:bg-[color-mix(in_oklab,var(--card),var(--primary)_7%)]"
+                >
+                  <Reveal delay={i * 0.04} y={10}>
+                    <div className="flex items-center gap-3.5">
+                      <span className="shrink-0 text-primary transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-110">
+                        <HugeiconsIcon icon={m.icon} size={22} strokeWidth={2} />
+                      </span>
+                      <span className="text-sm font-medium">{m.label}</span>
+                    </div>
+                  </Reveal>
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-gradient-to-r from-transparent via-primary to-transparent transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-x-100"
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -347,10 +353,8 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[201%] opacity-30 mix-blend-screen [mask-image:linear-gradient(to_bottom,transparent_0%,#000_15%,#000_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,#000_15%,#000_100%)]"
           >
-            <div
-              className="h-full w-full"
-              style={{ transform: "translateX(-269px)", transformOrigin: "center" }}
-            >
+            {/* mobile: centrato (visibile) — desktop: posizione fissata */}
+            <div className="h-full w-full origin-center md:translate-x-[-347px] md:translate-y-[3px]">
               <WhyLaser />
             </div>
           </div>
@@ -557,6 +561,23 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ---------- ECOSYSTEM PARTNERS ---------- */}
+        <section id="ecosystem" className="border-t border-border bg-muted/30">
+          <div className="mx-auto w-full max-w-7xl px-6 py-24">
+            <Reveal>
+              <div className="mx-auto mb-12 max-w-3xl text-center">
+                <p className="text-sm font-medium uppercase tracking-wider text-primary">
+                  Ecosystem Partners
+                </p>
+                <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
+                  Supporting new financial use cases onchain
+                </h2>
+              </div>
+            </Reveal>
+            <PartnersMarquee />
+          </div>
+        </section>
+
         {/* ---------- FINAL CTA ---------- */}
         <section id="contact" className="border-t border-border">
           <div className="mx-auto w-full max-w-7xl px-6 py-24">
@@ -565,13 +586,8 @@ export default function Home() {
               <div className="surface-invert relative overflow-hidden rounded-3xl border border-border bg-card px-8 py-16 text-center text-foreground md:px-16 md:py-20">
                 {/* Sfondo "sistema solare" minimal, dietro al contenuto */}
                 <div className="pointer-events-none absolute inset-0 -z-0 opacity-80">
-                  <div
-                    className="h-full w-full"
-                    style={{
-                      transform: "translate(231px, 115px) rotate(-11deg) scale(1.59)",
-                      transformOrigin: "center",
-                    }}
-                  >
+                  {/* mobile: centrato e visibile — desktop: posizione fissata */}
+                  <div className="h-full w-full origin-center translate-x-0 translate-y-0 rotate-[-11deg] scale-[1.12] md:translate-x-[231px] md:translate-y-[115px] md:scale-[1.59]">
                     <SolarFlow />
                   </div>
                 </div>

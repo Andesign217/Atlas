@@ -1,5 +1,15 @@
 import { HugeiconsIcon } from "@hugeicons/react";
-import { NewTwitterIcon, GithubIcon, BookOpen01Icon } from "@hugeicons/core-free-icons";
+import {
+  NewTwitterIcon,
+  Linkedin01Icon,
+  MediumIcon,
+  DiscordIcon,
+  TelegramIcon,
+  InstagramIcon,
+  RedditIcon,
+  GithubIcon,
+  BookOpen01Icon,
+} from "@hugeicons/core-free-icons";
 import { AtlasLogo } from "@/components/atlas-logo";
 
 const columns = [
@@ -25,6 +35,12 @@ const columns = [
 
 const socials = [
   { icon: NewTwitterIcon, label: "X", href: "https://x.com/FolksFinance" },
+  { icon: Linkedin01Icon, label: "LinkedIn", href: "https://www.linkedin.com/company/folksfinance/" },
+  { icon: MediumIcon, label: "Medium", href: "https://folksfinance.medium.com/" },
+  { icon: DiscordIcon, label: "Discord", href: "https://discord.com/invite/folksfinance" },
+  { icon: TelegramIcon, label: "Telegram", href: "https://t.me/FolksfinanceOfficial" },
+  { icon: InstagramIcon, label: "Instagram", href: "https://www.instagram.com/folksfinance/" },
+  { icon: RedditIcon, label: "Reddit", href: "https://www.reddit.com/r/FolksFinance/" },
   { icon: GithubIcon, label: "GitHub", href: "https://github.com/Folks-Finance" },
   { icon: BookOpen01Icon, label: "Docs", href: "https://docs.folks.finance" },
 ];
@@ -40,19 +56,23 @@ export function SiteFooter() {
               The open infrastructure layer for onchain lending. Built by Folks
               Finance.
             </p>
-            <div className="mt-6 flex gap-3">
-              {socials.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={s.label}
-                  className="grid size-9 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <HugeiconsIcon icon={s.icon} size={18} strokeWidth={1.5} />
-                </a>
-              ))}
+            <div className="mt-6 flex flex-wrap gap-3">
+              {socials.map((s) => {
+                const external = s.href.startsWith("http");
+                return (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    {...(external
+                      ? { target: "_blank", rel: "noreferrer" }
+                      : {})}
+                    aria-label={s.label}
+                    className="grid size-9 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    <HugeiconsIcon icon={s.icon} size={18} strokeWidth={1.5} />
+                  </a>
+                );
+              })}
             </div>
           </div>
 

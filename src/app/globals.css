@@ -234,6 +234,22 @@ section[id] {
   }
 }
 
+/* Badge reCAPTCHA nascosto (l'attribuzione richiesta è nel testo sotto il form) */
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
+/* Carosello partner: scorrimento orizzontale lento e continuo.
+   translate3d → composizione GPU (evita lo sfarfallio su Safari in hover). */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 /* Stelle lontane: glow blu intermittente (twinkle).
    Spegnimento totale (opacity 0) con pausa di buio prima di riaccendersi. */
 @keyframes star-twinkle {
