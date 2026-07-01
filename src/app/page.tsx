@@ -16,10 +16,18 @@ import {
   SquareLock02Icon,
   GoldIngotsIcon,
   Target01Icon,
-  UserGroupIcon,
   Tick02Icon,
   MinusSignIcon,
   Cancel01Icon,
+  PuzzleIcon,
+  ApiIcon,
+  GiftIcon,
+  BankIcon,
+  Timer01Icon,
+  UserLock02Icon,
+  CoinsSwapIcon,
+  MoneyAdd02Icon,
+  FlashIcon,
 } from "@hugeicons/core-free-icons";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -43,26 +51,35 @@ const stats = [
 
 const modules = [
   { icon: SlidersHorizontalIcon, label: "Multi-collateral & multi-borrow" },
-  { icon: Analytics01Icon, label: "Custom interest rate models" },
-  { icon: SecurityLockIcon, label: "KYC / AML & whitelists" },
+  { icon: Analytics01Icon, label: "Custom interest-rate models" },
+  { icon: Target01Icon, label: "Targeted borrow rates" },
+  { icon: SecurityLockIcon, label: "KYC/AML support" },
   { icon: JusticeScale01Icon, label: "Configurable liquidation engine" },
   { icon: Globe02Icon, label: "Any oracle (Chainlink, Pyth…)" },
   { icon: ViewOffSlashIcon, label: "Privacy module" },
   { icon: ShieldEnergyIcon, label: "Insurance & security modules" },
   { icon: DashboardSquare01Icon, label: "White-label frontend" },
+  { icon: PuzzleIcon, label: "Plugins" },
+  { icon: SquareLock02Icon, label: "Updatable or immutable" },
+  { icon: ApiIcon, label: "Analytics, REST & GraphQL" },
+  { icon: GiftIcon, label: "Merkl incentives" },
 ];
 
 // Comparazione Folks Atlas vs Aave vs Morpho (s: "yes" | "warn" | "no")
 const comparison = {
-  protocols: ["Folks Atlas", "Aave", "Morpho"],
+  protocols: ["Atlas", "Aave", "Morpho"],
   rows: [
     {
-      cap: "Launch your own lending environment",
+      cap: "Launch and manage your own lending app",
       cells: [
         { s: "yes" },
         { s: "no", note: "DAO / governance approval needed" },
         { s: "no", note: "Just vaults" },
       ],
+    },
+    {
+      cap: "No-code, live in minutes",
+      cells: [{ s: "yes" }, { s: "no" }, { s: "no" }],
     },
     {
       cap: "Multi-collateral + multi-borrow markets",
@@ -108,10 +125,6 @@ const comparison = {
       cap: "White-label solution",
       cells: [{ s: "yes" }, { s: "no" }, { s: "no" }],
     },
-    {
-      cap: "Create custom curated yield vaults",
-      cells: [{ s: "yes" }, { s: "no" }, { s: "yes" }],
-    },
   ],
 } as const;
 
@@ -130,8 +143,18 @@ const useCases = [
   },
   {
     icon: RepeatIcon,
-    title: "Efficiency lending",
-    desc: "Basket correlated assets together to offer higher LTV ratios for looping and LST strategies.",
+    title: "LST Looping",
+    desc: "List a liquid-staking token as collateral to borrow the underlying asset.",
+  },
+  {
+    icon: CoinsSwapIcon,
+    title: "Yield-bearing Stablecoin Looping",
+    desc: "List a yield-bearing stablecoin as collateral to borrow more stablecoins and offer looping yield strategies.",
+  },
+  {
+    icon: MoneyAdd02Icon,
+    title: "CDP Stablecoin",
+    desc: "Launch a lending app that lets users mint your stablecoin against many collateral tokens.",
   },
   {
     icon: CoinsDollarIcon,
@@ -139,19 +162,24 @@ const useCases = [
     desc: "Isolated collateral and borrow pairs with dedicated risk parameters.",
   },
   {
-    icon: SquareLock02Icon,
-    title: "Permissioned lending",
-    desc: "Closed environments for institutions and banks, with access control and private deployments.",
-  },
-  {
     icon: GoldIngotsIcon,
     title: "RWA lending",
     desc: "Bring real-world collateral onchain with configurable credit terms, risk controls, and borrower permissions.",
   },
   {
-    icon: Target01Icon,
-    title: "Intent-based lending",
-    desc: "Fixed-term, fixed-rate positions matched between lenders and borrowers.",
+    icon: Timer01Icon,
+    title: "Fixed Rate + Duration",
+    desc: "Overcollateralised lending at a fixed borrow rate for a fixed term.",
+  },
+  {
+    icon: UserLock02Icon,
+    title: "No-Collateral Lending",
+    desc: "Whitelisted addresses borrow without supplying any collateral.",
+  },
+  {
+    icon: BankIcon,
+    title: "Bank",
+    desc: "Launch a lending app ready for institutional use.",
   },
 ];
 
@@ -188,10 +216,9 @@ export default function Home() {
             </Reveal>
             <Reveal immediate delay={0.16}>
               <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground md:text-xl">
-                Folks Atlas enables institutions and builders to deploy
-                fully-configurable lending environments for any scale or
-                sophistication. Speak with our team to explore a tailored
-                integration.
+                Atlas enables anyone to deploy fully-configurable onchain
+                lending apps for any scale or sophistication. Speak with our
+                team to explore a tailored integration.
               </p>
             </Reveal>
             <Reveal immediate delay={0.24}>
@@ -259,25 +286,25 @@ export default function Home() {
             <Reveal y={24}>
               <div>
                 <p className="text-sm font-medium uppercase tracking-wider text-primary">
-                  Spokes
+                  Build
                 </p>
                 <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-                  Build your own lending environment
+                  Create your own lending app
                 </h2>
                 <p className="mt-4 text-muted-foreground">
-                  A Spoke is an isolated lending environment you fully control.
-                  List as many collateral and borrow assets as you need, then
-                  configure every parameter to match your strategy and compliance
-                  needs.
+                  A lending app is a fully-configurable lending environment you
+                  own and control. List as many collateral and borrow assets as
+                  you need, set every parameter to match your strategy and
+                  compliance needs, and launch on audited infrastructure.
                 </p>
                 <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
                   <HugeiconsIcon
-                    icon={UserGroupIcon}
+                    icon={FlashIcon}
                     size={20}
                     strokeWidth={2}
                     className="text-primary"
                   />
-                  Designed for institutions and builders
+                  Set up in as little as 10 minutes. No coding required.
                 </div>
               </div>
             </Reveal>
@@ -317,26 +344,16 @@ export default function Home() {
             <Reveal className="order-1 lg:order-2" y={24}>
               <div>
                 <p className="text-sm font-medium uppercase tracking-wider text-primary">
-                  Vaults
+                  Discover
                 </p>
                 <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-                  Curated yield, one click away for your users
+                  Explore and interact with apps built on Atlas
                 </h2>
                 <p className="mt-4 text-muted-foreground">
-                  Package allocation targets, risk controls, and tailored
-                  strategies into a single Vault. End users deposit once and earn
-                  yield automatically, while curators manage allocations and
-                  rebalancing behind the scenes.
+                  Allows general users to discover every app built on Atlas and
+                  interact with them. Browse live lending apps, deposit, earn, or
+                  borrow all from one place.
                 </p>
-                <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
-                  <HugeiconsIcon
-                    icon={UserGroupIcon}
-                    size={20}
-                    strokeWidth={2}
-                    className="text-primary"
-                  />
-                  Designed for curators and asset managers
-                </div>
               </div>
             </Reveal>
           </div>
@@ -362,17 +379,16 @@ export default function Home() {
             <Reveal>
               <div className="mx-auto max-w-3xl text-center">
                 <p className="text-sm font-medium uppercase tracking-wider text-primary">
-                  Why Folks Atlas
+                  Why Atlas
                 </p>
                 <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-                  Built different, so you can build differently
+                  Built different, so you can build differently.
                 </h2>
                 <p className="mt-4 text-balance text-muted-foreground">
-                  Atlas combines the liquidity depth of monolithic lending with
-                  the flexibility of modular markets, giving institutions and
-                  builders the tools to launch unique lending environments
-                  tailored to their assets, users, risk models, and compliance
-                  needs.
+                  Atlas gives teams the control usually missing from existing
+                  lending infrastructure: full customization around their
+                  assets, users, risk models, compliance needs, and a fully
+                  owned user experience.
                 </p>
               </div>
             </Reveal>
@@ -498,9 +514,9 @@ export default function Home() {
                 </h2>
                 <p className="mt-4 text-muted-foreground">
                   From permissionless lending markets to permissioned
-                  institutional venues and real-world assets, Folks Atlas lets you
-                  configure a Spoke for any need and unlock lending use cases that
-                  weren&apos;t previously possible onchain.
+                  institutional venues and real-world assets, Atlas lets you
+                  configure an App for any need and unlock lending use cases
+                  that weren&apos;t previously possible onchain.
                 </p>
               </div>
             </Reveal>
@@ -593,11 +609,12 @@ export default function Home() {
                 </div>
                 <div className="relative z-10">
                   <h2 className="mx-auto max-w-3xl text-balance text-3xl font-semibold tracking-tight md:text-5xl">
-                    Launch your lending environment with Atlas
+                    Launch your lending app with Atlas
                   </h2>
                   <p className="mx-auto mt-4 max-w-xl text-balance text-muted-foreground">
-                    We&apos;re onboarding a select group of curators, institutions and
-                    partners ahead of launch. Let&apos;s build together.
+                    We&apos;re onboarding a select group of projects, curators,
+                    institutions and partners ahead of launch. Let&apos;s build
+                    together.
                   </p>
                   <ContactForm />
                 </div>

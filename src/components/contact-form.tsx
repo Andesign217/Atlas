@@ -157,7 +157,7 @@ export function ContactForm() {
           Describe your use case
         </label>
         <p className="mb-2 mt-[-2px] pl-4 text-xs text-muted-foreground">
-          {"In a couple of sentences, please share what you're interested in building with Folks Atlas"}
+          {"In a couple of sentences, please share what you're interested in building with Atlas"}
         </p>
         <textarea
           id="usecase"
@@ -165,7 +165,7 @@ export function ContactForm() {
           onChange={set("message")}
           required
           rows={4}
-          placeholder="I'd like to explore using Folks Atlas to launch a looping strategy market for our LST, enabling users to access leveraged yield opportunities in a configurable and controlled lending environment."
+          placeholder="I’d like to explore using Atlas to launch an LST looping app to offer our users leveraged yield opportunities."
           aria-label="Describe your use case"
           className={`${inputClass} resize-none`}
         />
