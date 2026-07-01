@@ -19,7 +19,6 @@ import {
   Tick02Icon,
   MinusSignIcon,
   Cancel01Icon,
-  PuzzleIcon,
   ApiIcon,
   GiftIcon,
   BankIcon,
@@ -32,7 +31,7 @@ import {
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/motion/reveal";
-import { VaultFlow } from "@/components/vault-flow";
+import { DiscoverFlow } from "@/components/discover-flow";
 import { ForbesLogo } from "@/components/forbes-logo";
 import { HeroRays } from "@/components/hero-rays";
 import { WhyLaser } from "@/components/why-laser";
@@ -59,7 +58,6 @@ const modules = [
   { icon: ViewOffSlashIcon, label: "Privacy module" },
   { icon: ShieldEnergyIcon, label: "Insurance & security modules" },
   { icon: DashboardSquare01Icon, label: "White-label frontend" },
-  { icon: PuzzleIcon, label: "Plugins" },
   { icon: SquareLock02Icon, label: "Updatable or immutable" },
   { icon: ApiIcon, label: "Analytics, REST & GraphQL" },
   { icon: GiftIcon, label: "Merkl incentives" },
@@ -338,7 +336,7 @@ export default function Home() {
           <div className="mx-auto grid w-full max-w-7xl items-center gap-14 px-6 py-24 lg:grid-cols-2">
             <Reveal className="order-2 lg:order-1" y={24}>
               <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
-                <VaultFlow />
+                <DiscoverFlow />
               </div>
             </Reveal>
             <Reveal className="order-1 lg:order-2" y={24}>

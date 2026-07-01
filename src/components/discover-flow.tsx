@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Diagramma animato del flusso di un Vault verso i suoi Spoke.
- * Un deposito (USDC) confluisce nel Vault e viene distribuito su più Spoke.
- * Stesso linguaggio visivo del flusso "istituzioni": impulsi allungati a
+ * Diagramma animato del flusso di scoperta: un utente esplora più App
+ * costruite su Atlas e interagisce con esse (deposit / earn / borrow).
+ * Stesso linguaggio visivo del flusso Vault/istituzioni: impulsi allungati a
  * gradiente che scorrono lungo le linee (rAF) e box che si illuminano per
  * prossimità (proximity glow). Rispetta prefers-reduced-motion.
  */
@@ -14,10 +14,10 @@ type Pt = { x: number; y: number };
 
 // Coordinate in spazio 0..100 (preserveAspectRatio none → x e y indipendenti)
 const ORIGIN: Pt = { x: 50, y: 22 };
-const SPOKES = [
-  { label: "Spoke A", conn: { x: 16, y: 78 } },
-  { label: "Spoke B", conn: { x: 50, y: 78 } },
-  { label: "Spoke C", conn: { x: 84, y: 78 } },
+const APPS = [
+  { label: "Lending App A", action: "Deposit", conn: { x: 16, y: 78 } },
+  { label: "Lending App B", action: "Earn", conn: { x: 50, y: 78 } },
+  { label: "Lending App C", action: "Borrow", conn: { x: 84, y: 78 } },
 ];
 
 const routePath = (a: Pt, b: Pt) => {
@@ -26,18 +26,18 @@ const routePath = (a: Pt, b: Pt) => {
   return `M ${a.x} ${a.y} C ${a.x} ${cy}, ${b.x} ${cy}, ${b.x} ${b.y}`;
 };
 
-const DUR_MS = 2600; // discesa Vault → Spoke (loop)
+const DUR_MS = 2600; // discesa Explorer → App (loop)
 
-export function VaultFlow() {
+export function DiscoverFlow() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
   const pulseRefs = useRef<(HTMLDivElement | null)[]>([]);
-  // box[0] = Vault deposit, box[1..3] = Spoke A/B/C
+  // box[0] = Explorer, box[1..3] = App A/B/C
   const boxRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const routes = SPOKES.map((s) => routePath(ORIGIN, s.conn));
+  const routes = APPS.map((a) => routePath(ORIGIN, a.conn));
   // Punto di "aggancio" di ogni box (dove la linea lo tocca) per il glow di prossimità
-  const conns: Pt[] = [ORIGIN, ...SPOKES.map((s) => s.conn)];
+  const conns: Pt[] = [ORIGIN, ...APPS.map((a) => a.conn)];
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -119,7 +119,7 @@ export function VaultFlow() {
 
   return (
     <div ref={wrapRef} className="relative h-[280px] w-full sm:h-[300px]">
-      {/* Linee di base (Vault → Spoke) */}
+      {/* Linee di base (Explorer → App) */}
       <svg
         aria-hidden
         viewBox="0 0 100 100"
@@ -152,29 +152,32 @@ export function VaultFlow() {
         />
       ))}
 
-      {/* Vault deposit box (in alto, larghezza piena) */}
+      {/* Explorer box (in alto, larghezza piena) */}
       <div
         ref={(el) => {
           boxRefs.current[0] = el;
         }}
         className="absolute inset-x-0 top-0 z-[1] flex items-center justify-between rounded-xl border border-border bg-muted px-4 py-3 backdrop-blur-sm"
       >
-        <span className="text-sm font-semibold text-foreground">Vault deposit</span>
-        <span className="text-sm text-muted-foreground">USDC</span>
+        <span className="text-sm font-semibold text-foreground">You</span>
+        <span className="text-sm text-muted-foreground">Exploring Atlas</span>
       </div>
 
-      {/* Spoke (in basso) */}
-      {SPOKES.map((s, i) => (
+      {/* App (in basso) */}
+      {APPS.map((a, i) => (
         <div
-          key={s.label}
+          key={a.label}
           ref={(el) => {
             boxRefs.current[i + 1] = el;
           }}
-          style={{ left: `${s.conn.x}%`, top: `${s.conn.y}%` }}
-          className="absolute z-[1] flex w-[28%] -translate-x-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/50 px-2 py-3 text-center backdrop-blur-sm"
+          style={{ left: `${a.conn.x}%`, top: `${a.conn.y}%` }}
+          className="absolute z-[1] flex w-[30%] -translate-x-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/50 px-2 py-3 text-center backdrop-blur-sm"
         >
           <span className="text-xs font-medium text-muted-foreground sm:text-sm">
-            {s.label}
+            {a.label}
+          </span>
+          <span className="text-[11px] font-medium text-primary sm:text-xs">
+            {a.action}
           </span>
         </div>
       ))}
