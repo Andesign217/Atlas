@@ -28,7 +28,7 @@ const PULSE_PHASE = [0, 0.22, 0.48, 0.7];
 const DUR_MS = 3200; // durata di un giro completo andata + ritorno
 
 const cornerPath = (a: Pt, b: Pt) =>
-  `M ${a.x} ${a.y} C ${b.x} ${a.y}, ${a.x} ${b.y}, ${b.x} ${b.y}`;
+  `M ${a.x} ${a.y} C ${a.x} ${b.y}, ${b.x} ${a.y}, ${b.x} ${b.y}`;
 
 export function DiscoverFlow() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
