@@ -3,41 +3,43 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Diagramma animato del flusso di scoperta: un utente esplora più App
- * costruite su Atlas e interagisce con esse (deposit / earn / borrow).
+ * Diagramma animato del flusso di scoperta: "You" al centro, 4 App
+ * costruite su Atlas ai vertici. Gli impulsi percorrono ogni linea andata
+ * e ritorno (centro → app → centro), rappresentando l'interazione continua
+ * dell'utente con le app (deposit / earn / borrow / repay).
  * Stesso linguaggio visivo del flusso Vault/istituzioni: impulsi allungati a
- * gradiente che scorrono lungo le linee (rAF) e box che si illuminano per
- * prossimità (proximity glow). Rispetta prefers-reduced-motion.
+ * gradiente (rAF) e box che si illuminano per prossimità (proximity glow).
+ * Rispetta prefers-reduced-motion.
  */
 
 type Pt = { x: number; y: number };
 
 // Coordinate in spazio 0..100 (preserveAspectRatio none → x e y indipendenti)
-const ORIGIN: Pt = { x: 50, y: 22 };
+const CENTER: Pt = { x: 50, y: 50 };
 const APPS = [
-  { label: "Lending App A", action: "Deposit", conn: { x: 16, y: 78 } },
-  { label: "Lending App B", action: "Earn", conn: { x: 50, y: 78 } },
-  { label: "Lending App C", action: "Borrow", conn: { x: 84, y: 78 } },
+  { label: "Lending App A", action: "Deposit", conn: { x: 15, y: 14 } },
+  { label: "Lending App B", action: "Earn", conn: { x: 85, y: 14 } },
+  { label: "Lending App C", action: "Borrow", conn: { x: 15, y: 86 } },
+  { label: "Lending App D", action: "Repay", conn: { x: 85, y: 86 } },
 ];
 
-const routePath = (a: Pt, b: Pt) => {
-  if (a.x === b.x) return `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
-  const cy = a.y + (b.y - a.y) * 0.5;
-  return `M ${a.x} ${a.y} C ${a.x} ${cy}, ${b.x} ${cy}, ${b.x} ${b.y}`;
-};
+// Sfasamento per vertice → gli impulsi non partono mai tutti insieme
+const PULSE_PHASE = [0, 0.22, 0.48, 0.7];
+const DUR_MS = 3200; // durata di un giro completo andata + ritorno
 
-const DUR_MS = 2600; // discesa Explorer → App (loop)
+const cornerPath = (a: Pt, b: Pt) =>
+  `M ${a.x} ${a.y} C ${b.x} ${a.y}, ${a.x} ${b.y}, ${b.x} ${b.y}`;
 
 export function DiscoverFlow() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
   const pulseRefs = useRef<(HTMLDivElement | null)[]>([]);
-  // box[0] = Explorer, box[1..3] = App A/B/C
+  // box[0] = You (centro), box[1..4] = App A/B/C/D
   const boxRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const routes = APPS.map((a) => routePath(ORIGIN, a.conn));
+  const routes = APPS.map((a) => cornerPath(CENTER, a.conn));
   // Punto di "aggancio" di ogni box (dove la linea lo tocca) per il glow di prossimità
-  const conns: Pt[] = [ORIGIN, ...APPS.map((a) => a.conn)];
+  const conns: Pt[] = [CENTER, ...APPS.map((a) => a.conn)];
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -64,33 +66,35 @@ export function DiscoverFlow() {
       return () => ro.disconnect();
     }
 
-    const FALLOFF = 32; // px: distanza oltre la quale il glow si annulla (stretto → si accende solo all'arrivo del beam)
-
     let raf = 0;
     let startT: number | null = null;
     const tick = (t: number) => {
       if (startT == null) startT = t;
-      const prog = ((t - startT) % DUR_MS) / DUR_MS; // 0→1 in loop (discesa)
-      // dissolvenza ai due estremi → niente "teletrasporto" al reset
-      const fade = Math.max(0, Math.min(1, prog / 0.12, (1 - prog) / 0.12));
+      const elapsed = t - startT;
       const pulsePts: Pt[] = [];
 
       pathRefs.current.forEach((path, i) => {
         const pulse = pulseRefs.current[i];
         if (!path || !pulse || !lengths[i]) return;
         const len = lengths[i];
-        const s = prog * len;
+        const cycle = (((elapsed + PULSE_PHASE[i] * DUR_MS) % DUR_MS) / DUR_MS);
+        // Onda triangolare 0→1→0: andata verso il vertice, ritorno al centro
+        const pos = cycle < 0.5 ? cycle * 2 : (1 - cycle) * 2;
+        const s = pos * len;
         const c = path.getPointAtLength(s);
         const a1 = path.getPointAtLength(Math.max(0, s - 0.8));
         const a2 = path.getPointAtLength(Math.min(len, s + 0.8));
         const cx = (c.x / 100) * W;
         const cy = (c.y / 100) * H;
         const ang = Math.atan2(((a2.y - a1.y) / 100) * H, ((a2.x - a1.x) / 100) * W);
+        // dissolvenza leggera in prossimità dei due estremi (centro / vertice)
+        const fade = Math.max(0.35, Math.sin(pos * Math.PI * 0.9 + 0.1));
         pulse.style.opacity = fade.toFixed(3);
         pulse.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%) rotate(${ang}rad)`;
         pulsePts.push({ x: cx, y: cy });
       });
 
+      const FALLOFF = 32; // px: distanza oltre la quale il glow si annulla
       boxRefs.current.forEach((el, i) => {
         if (!el || !connPx[i]) return;
         let g = 0;
@@ -98,7 +102,7 @@ export function DiscoverFlow() {
           const dist = Math.hypot(connPx[i].x - p.x, connPx[i].y - p.y);
           g = Math.max(g, 1 - dist / FALLOFF);
         }
-        g = Math.max(0, g) * fade;
+        g = Math.max(0, g);
         if (g > 0.02) {
           el.style.boxShadow = `0 0 ${(30 * g).toFixed(1)}px rgba(28,118,255,${(0.4 * g).toFixed(3)}), 0 0 ${(60 * g).toFixed(1)}px rgba(28,118,255,${(0.2 * g).toFixed(3)})`;
           el.style.borderColor = `rgba(28,118,255,${(0.2 + 0.55 * g).toFixed(3)})`;
@@ -118,8 +122,8 @@ export function DiscoverFlow() {
   }, []);
 
   return (
-    <div ref={wrapRef} className="relative h-[280px] w-full sm:h-[300px]">
-      {/* Linee di base (Explorer → App) */}
+    <div ref={wrapRef} className="relative h-[320px] w-full sm:h-[360px]">
+      {/* Linee di base (You ↔ App) */}
       <svg
         aria-hidden
         viewBox="0 0 100 100"
@@ -141,7 +145,7 @@ export function DiscoverFlow() {
         ))}
       </svg>
 
-      {/* Impulsi allungati a gradiente (uno per linea) */}
+      {/* Impulsi allungati a gradiente (uno per linea, andata e ritorno) */}
       {routes.map((_, i) => (
         <div
           key={i}
@@ -152,18 +156,19 @@ export function DiscoverFlow() {
         />
       ))}
 
-      {/* Explorer box (in alto, larghezza piena) */}
+      {/* You (al centro) */}
       <div
         ref={(el) => {
           boxRefs.current[0] = el;
         }}
-        className="absolute inset-x-0 top-0 z-[1] flex items-center justify-between rounded-xl border border-border bg-muted px-4 py-3 backdrop-blur-sm"
+        style={{ left: "50%", top: "50%" }}
+        className="absolute z-[1] flex w-[34%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted px-3 py-4 text-center backdrop-blur-sm"
       >
         <span className="text-sm font-semibold text-foreground">You</span>
-        <span className="text-sm text-muted-foreground">Exploring Atlas</span>
+        <span className="text-xs text-muted-foreground">Exploring Atlas</span>
       </div>
 
-      {/* App (in basso) */}
+      {/* App (ai 4 vertici) */}
       {APPS.map((a, i) => (
         <div
           key={a.label}
@@ -171,7 +176,7 @@ export function DiscoverFlow() {
             boxRefs.current[i + 1] = el;
           }}
           style={{ left: `${a.conn.x}%`, top: `${a.conn.y}%` }}
-          className="absolute z-[1] flex w-[30%] -translate-x-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/50 px-2 py-3 text-center backdrop-blur-sm"
+          className="absolute z-[1] flex w-[30%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/50 px-2 py-3 text-center backdrop-blur-sm"
         >
           <span className="text-xs font-medium text-muted-foreground sm:text-sm">
             {a.label}
