@@ -32,7 +32,9 @@ const APPS = [
 
 // Tutti gli impulsi partono da User in sincrono
 const PULSE_PHASE = [0, 0, 0, 0];
-const DUR_MS = 1900; // durata della corsa User → App (loop)
+const TRAVEL_MS = 1900; // durata della corsa User → App
+const PAUSE_MS = 2000; // pausa all'arrivo prima che riparta il prossimo impulso
+const CYCLE_MS = TRAVEL_MS + PAUSE_MS;
 
 const cornerPath = (a: Pt, b: Pt) =>
   `M ${a.x} ${a.y} C ${a.x} ${b.y}, ${b.x} ${a.y}, ${b.x} ${b.y}`;
@@ -84,8 +86,9 @@ export function DiscoverFlow() {
         const pulse = pulseRefs.current[i];
         if (!path || !pulse || !lengths[i]) return;
         const len = lengths[i];
-        const pos = (((elapsed + PULSE_PHASE[i] * DUR_MS) % DUR_MS) / DUR_MS);
-        // Corsa unidirezionale User → App, poi riparte dall'inizio (loop)
+        const cyclePos = (elapsed + PULSE_PHASE[i] * CYCLE_MS) % CYCLE_MS;
+        // Corsa unidirezionale User → App, pausa all'arrivo, poi riparte dall'inizio
+        const pos = cyclePos < TRAVEL_MS ? cyclePos / TRAVEL_MS : 1;
         const s = pos * len;
         const c = path.getPointAtLength(s);
         const a1 = path.getPointAtLength(Math.max(0, s - 0.8));
