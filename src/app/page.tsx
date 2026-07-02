@@ -27,6 +27,7 @@ import {
   CoinsSwapIcon,
   MoneyAdd02Icon,
   FlashIcon,
+  CompassIcon,
 } from "@hugeicons/core-free-icons";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -345,13 +346,22 @@ export default function Home() {
                   Discover
                 </p>
                 <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-                  Explore and interact with apps built on Atlas
+                  Explore apps built on Atlas
                 </h2>
                 <p className="mt-4 text-muted-foreground">
-                  Allows general users to discover every app built on Atlas and
-                  interact with them. Browse live lending apps, deposit, earn, or
-                  borrow all from one place.
+                  An interface that allows general users to discover apps
+                  built on Atlas and interact with them. Browse live lending
+                  apps, deposit, earn, or borrow all from one place.
                 </p>
+                <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
+                  <HugeiconsIcon
+                    icon={CompassIcon}
+                    size={20}
+                    strokeWidth={2}
+                    className="text-primary"
+                  />
+                  From permissionless to institutional. All in one view.
+                </div>
               </div>
             </Reveal>
           </div>

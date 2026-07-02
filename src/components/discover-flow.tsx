@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  RepeatIcon,
+  GoldIngotsIcon,
+  BankIcon,
+  CoinsSwapIcon,
+} from "@hugeicons/core-free-icons";
 
 /**
- * Diagramma animato del flusso di scoperta: "You" al centro, 4 App
+ * Diagramma animato del flusso di scoperta: "User" al centro, 4 App
  * costruite su Atlas ai vertici. Gli impulsi percorrono ogni linea andata
  * e ritorno (centro → app → centro), rappresentando l'interazione continua
- * dell'utente con le app (deposit / earn / borrow / repay).
+ * dell'utente con le app.
  * Stesso linguaggio visivo del flusso Vault/istituzioni: impulsi allungati a
  * gradiente (rAF) e box che si illuminano per prossimità (proximity glow).
  * Rispetta prefers-reduced-motion.
@@ -17,10 +24,10 @@ type Pt = { x: number; y: number };
 // Coordinate in spazio 0..100 (preserveAspectRatio none → x e y indipendenti)
 const CENTER: Pt = { x: 50, y: 50 };
 const APPS = [
-  { label: "Lending App A", action: "Deposit", conn: { x: 15, y: 14 } },
-  { label: "Lending App B", action: "Earn", conn: { x: 85, y: 14 } },
-  { label: "Lending App C", action: "Borrow", conn: { x: 15, y: 86 } },
-  { label: "Lending App D", action: "Repay", conn: { x: 85, y: 86 } },
+  { label: "App A", type: "LST Looping", icon: RepeatIcon, conn: { x: 15, y: 14 } },
+  { label: "App B", type: "RWA Lending", icon: GoldIngotsIcon, conn: { x: 85, y: 14 } },
+  { label: "App C", type: "Bank", icon: BankIcon, conn: { x: 15, y: 86 } },
+  { label: "App D", type: "Stablecoin Looping", icon: CoinsSwapIcon, conn: { x: 85, y: 86 } },
 ];
 
 // Sfasamento per vertice → gli impulsi non partono mai tutti insieme
@@ -123,7 +130,7 @@ export function DiscoverFlow() {
 
   return (
     <div ref={wrapRef} className="relative h-[320px] w-full sm:h-[360px]">
-      {/* Linee di base (You ↔ App) */}
+      {/* Linee di base (User ↔ App) */}
       <svg
         aria-hidden
         viewBox="0 0 100 100"
@@ -156,7 +163,7 @@ export function DiscoverFlow() {
         />
       ))}
 
-      {/* You (al centro) */}
+      {/* User (al centro) */}
       <div
         ref={(el) => {
           boxRefs.current[0] = el;
@@ -164,8 +171,8 @@ export function DiscoverFlow() {
         style={{ left: "50%", top: "50%" }}
         className="absolute z-[1] flex w-[34%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted px-3 py-4 text-center backdrop-blur-sm"
       >
-        <span className="text-sm font-semibold text-foreground">You</span>
-        <span className="text-xs text-muted-foreground">Exploring Atlas</span>
+        <span className="text-sm font-semibold text-foreground">User</span>
+        <span className="text-xs text-muted-foreground">Exploring Apps</span>
       </div>
 
       {/* App (ai 4 vertici) */}
@@ -178,11 +185,14 @@ export function DiscoverFlow() {
           style={{ left: `${a.conn.x}%`, top: `${a.conn.y}%` }}
           className="absolute z-[1] flex w-[30%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/50 px-2 py-3 text-center backdrop-blur-sm"
         >
+          <span className="text-primary">
+            <HugeiconsIcon icon={a.icon} size={18} strokeWidth={2} />
+          </span>
           <span className="text-xs font-medium text-muted-foreground sm:text-sm">
             {a.label}
           </span>
           <span className="text-[11px] font-medium text-primary sm:text-xs">
-            {a.action}
+            {a.type}
           </span>
         </div>
       ))}
