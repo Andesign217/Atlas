@@ -87,8 +87,13 @@ export function DiscoverFlow() {
         if (!path || !pulse || !lengths[i]) return;
         const len = lengths[i];
         const cyclePos = (elapsed + PULSE_PHASE[i] * CYCLE_MS) % CYCLE_MS;
-        // Corsa unidirezionale User → App, pausa all'arrivo, poi riparte dall'inizio
-        const pos = cyclePos < TRAVEL_MS ? cyclePos / TRAVEL_MS : 1;
+        // In pausa (impulso arrivato): niente impulso visibile, niente glow
+        if (cyclePos >= TRAVEL_MS) {
+          pulse.style.opacity = "0";
+          return;
+        }
+        // Corsa unidirezionale User → App
+        const pos = cyclePos / TRAVEL_MS;
         const s = pos * len;
         const c = path.getPointAtLength(s);
         const a1 = path.getPointAtLength(Math.max(0, s - 0.8));
@@ -171,7 +176,7 @@ export function DiscoverFlow() {
           boxRefs.current[0] = el;
         }}
         style={{ left: "50%", top: "50%" }}
-        className="absolute z-[1] flex w-[34%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted px-3 py-4 text-center backdrop-blur-sm"
+        className="absolute z-[1] flex w-[34%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted px-3 py-4 text-center backdrop-blur-sm transition-[box-shadow,border-color] duration-200 ease-out"
       >
         <span className="text-primary">
           <HugeiconsIcon icon={UserIcon} size={18} strokeWidth={2} />
@@ -188,7 +193,7 @@ export function DiscoverFlow() {
             boxRefs.current[i + 1] = el;
           }}
           style={{ left: `${a.conn.x}%`, top: `${a.conn.y}%` }}
-          className="absolute z-[1] flex w-[30%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/50 px-2 py-3 text-center backdrop-blur-sm"
+          className="absolute z-[1] flex w-[30%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/50 px-2 py-3 text-center backdrop-blur-sm transition-[box-shadow,border-color] duration-300 ease-out"
         >
           <span className="text-primary">
             <HugeiconsIcon icon={a.icon} size={18} strokeWidth={2} />
