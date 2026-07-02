@@ -7,6 +7,7 @@ import {
   GoldIngotsIcon,
   BankIcon,
   CoinsSwapIcon,
+  UserIcon,
 } from "@hugeicons/core-free-icons";
 
 /**
@@ -169,6 +170,9 @@ export function DiscoverFlow() {
         style={{ left: "50%", top: "50%" }}
         className="absolute z-[1] flex w-[34%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted px-3 py-4 text-center backdrop-blur-sm"
       >
+        <span className="text-primary">
+          <HugeiconsIcon icon={UserIcon} size={18} strokeWidth={2} />
+        </span>
         <span className="text-sm font-semibold text-foreground">User</span>
         <span className="text-xs text-muted-foreground">Exploring Apps</span>
       </div>
