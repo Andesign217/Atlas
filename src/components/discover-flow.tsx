@@ -30,8 +30,8 @@ const APPS = [
   { label: "App D", type: "Stablecoin Looping", icon: CoinsSwapIcon, conn: { x: 85, y: 86 } },
 ];
 
-// Sfasamento per vertice → gli impulsi non partono mai tutti insieme
-const PULSE_PHASE = [0, 0.22, 0.48, 0.7];
+// Tutti gli impulsi partono da User in sincrono
+const PULSE_PHASE = [0, 0, 0, 0];
 const DUR_MS = 1900; // durata della corsa User → App (loop)
 
 const cornerPath = (a: Pt, b: Pt) =>
