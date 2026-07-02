@@ -11,9 +11,8 @@ import {
 
 /**
  * Diagramma animato del flusso di scoperta: "User" al centro, 4 App
- * costruite su Atlas ai vertici. Gli impulsi percorrono ogni linea andata
- * e ritorno (centro → app → centro), rappresentando l'interazione continua
- * dell'utente con le app.
+ * costruite su Atlas ai vertici. Gli impulsi percorrono ogni linea in una
+ * sola direzione, User → App, poi ripartono in loop dal centro.
  * Stesso linguaggio visivo del flusso Vault/istituzioni: impulsi allungati a
  * gradiente (rAF) e box che si illuminano per prossimità (proximity glow).
  * Rispetta prefers-reduced-motion.
@@ -32,7 +31,7 @@ const APPS = [
 
 // Sfasamento per vertice → gli impulsi non partono mai tutti insieme
 const PULSE_PHASE = [0, 0.22, 0.48, 0.7];
-const DUR_MS = 3200; // durata di un giro completo andata + ritorno
+const DUR_MS = 1900; // durata della corsa User → App (loop)
 
 const cornerPath = (a: Pt, b: Pt) =>
   `M ${a.x} ${a.y} C ${a.x} ${b.y}, ${b.x} ${a.y}, ${b.x} ${b.y}`;
@@ -84,9 +83,8 @@ export function DiscoverFlow() {
         const pulse = pulseRefs.current[i];
         if (!path || !pulse || !lengths[i]) return;
         const len = lengths[i];
-        const cycle = (((elapsed + PULSE_PHASE[i] * DUR_MS) % DUR_MS) / DUR_MS);
-        // Onda triangolare 0→1→0: andata verso il vertice, ritorno al centro
-        const pos = cycle < 0.5 ? cycle * 2 : (1 - cycle) * 2;
+        const pos = (((elapsed + PULSE_PHASE[i] * DUR_MS) % DUR_MS) / DUR_MS);
+        // Corsa unidirezionale User → App, poi riparte dall'inizio (loop)
         const s = pos * len;
         const c = path.getPointAtLength(s);
         const a1 = path.getPointAtLength(Math.max(0, s - 0.8));
@@ -94,8 +92,8 @@ export function DiscoverFlow() {
         const cx = (c.x / 100) * W;
         const cy = (c.y / 100) * H;
         const ang = Math.atan2(((a2.y - a1.y) / 100) * H, ((a2.x - a1.x) / 100) * W);
-        // dissolvenza leggera in prossimità dei due estremi (centro / vertice)
-        const fade = Math.max(0.35, Math.sin(pos * Math.PI * 0.9 + 0.1));
+        // dissolvenza ai due estremi → niente "teletrasporto" al reset del loop
+        const fade = Math.max(0, Math.min(1, pos / 0.12, (1 - pos) / 0.12));
         pulse.style.opacity = fade.toFixed(3);
         pulse.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%) rotate(${ang}rad)`;
         pulsePts.push({ x: cx, y: cy });
